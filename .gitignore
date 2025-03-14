@@ -104,4 +104,7 @@ results/
 # VS Code
 .vscode/
 
-
+# models
+.models/
+/.models/
+.models/
