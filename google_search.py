@@ -4,16 +4,15 @@ import os
 api_key = os.getenv("api_key")
 cx = os.getenv("cx")
 
-
 def google_search_api(query, api_key, cx, num_results=10):
     """
-    Perform a Google search using Google Custom Search JSON API and return results.
-
-    :param query: The search query.
-    :param api_key: Your Google API key.
-    :param cx: Your Google Custom Search Engine ID.
-    :param num_results: Number of results to fetch (default is 10).
-    :return: List of search results with title, link, and snippet.
+    perform a google search using google custom search json api and return results.
+    
+    :param query: the search query.
+    :param api_key: your google api key.
+    :param cx: your google custom search engine id.
+    :param num_results: number of results to fetch (default is 10).
+    :return: list of search results with title, link, and snippet.
     """
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
@@ -26,6 +25,7 @@ def google_search_api(query, api_key, cx, num_results=10):
     response = requests.get(url, params=params)
     data = response.json()
     
+    #check if there are search results in the response
     if "items" in data:
         return [
             {
@@ -36,9 +36,10 @@ def google_search_api(query, api_key, cx, num_results=10):
             for result in data["items"]
         ]
     else:
-        return {"error": "No results found or invalid API key."}
+        return {"error": "no results found or invalid api key."}
 
+
+#standard python entry point
 if __name__ == "__main__":
-    # Example usagep
+    #example usage
     print(google_search_api('what is the meaning of life?', api_key, cx))
-
