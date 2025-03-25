@@ -54,16 +54,16 @@ def get_page_articles(url, headless=True):
         browser = p.chromium.launch(headless=headless)
         page = browser.new_page()
         
-        # Add some randomization to seem more human-like
+        #add some randomization to seem more human-like
         page.set_viewport_size({"width": 1366, "height": 768})
         
-        # Go to the URL
+        #go to the URL
         page.goto(url, timeout=60000)
         
-        # Wait for the page to load completely
+        #2ait for the page to load completely
         page.wait_for_load_state("networkidle")
         
-        # Get the full HTML content
+        #get the full html content
         html_content = page.content()
 
         #save the html content to a file
@@ -80,27 +80,18 @@ def get_page_articles(url, headless=True):
 
 def get_articles_from_source(source_url, max_articles=5, headless=True):
     print("it's working now")
-    """
-    Get multiple articles from a news source.
-    
-    :param source_url: URL of the news source
-    :param max_articles: Maximum number of articles to retrieve
-    :param headless: Whether to run in headless mode
-    :return: List of article dictionaries
-    """
-    # Build a source object
     source = newspaper.build(source_url, memoize_articles=False)
     
-    # Get article URLs
+    #getting article URLs
     article_urls = [article.url for article in source.articles[:max_articles]]
     
-    # Get content for each article
+    #content for each article
     articles = []
     for url in article_urls:
         try:
             article_content = get_page_articles(url, headless)
             articles.append(article_content)
-            # Add a small delay between requests to avoid getting blocked
+            #delay
             time.sleep(random.uniform(1, 3))
         except Exception as e:
             print(f"Error processing {url}: {e}")
@@ -109,7 +100,7 @@ def get_articles_from_source(source_url, max_articles=5, headless=True):
 
 if __name__ == "__main__":
     # Test single article extraction
-    url = "https://www.bbc.com/news"
+    url = "https://en.wikipedia.org/wiki/Meaning_of_life"
     article = get_page_articles(url, headless=True)
     print(f"Title: {article['title']}")
     print(f"Text (first 300 chars): {article['text'][:3000]}...")
@@ -117,16 +108,16 @@ if __name__ == "__main__":
     print(f"Keywords: {article['keywords']}")
     print("\n" + "-"*50 + "\n")
     
-    # Test multiple articles from a source
-    news_source = "https://www.bbc.com/news"
-    print(f"Getting articles from {news_source}...")
-    articles = get_articles_from_source(news_source, max_articles=3, headless=True)
+    # # Test multiple articles from a source
+    # news_source = "https://www.bbc.com/news"
+    # print(f"Getting articles from {news_source}...")
+    # articles = get_articles_from_source(news_source, max_articles=3, headless=True)
 
-    for i, article in enumerate(articles, 1):
-        print(f"Article {i}:")
-        print(f"Title: {article['title']}")
-        print(f"Text (first 200 chars): {article['text'][:2000]}...")
-        print("\n")
+    # for i, article in enumerate(articles, 1):
+    #     print(f"Article {i}:")
+    #     print(f"Title: {article['title']}")
+    #     print(f"Text (first 200 chars): {article['text'][:2000]}...")
+    #     print("\n")
 
 
 # from playwright.sync_api import sync_playwright

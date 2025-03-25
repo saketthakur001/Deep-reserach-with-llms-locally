@@ -1,48 +1,53 @@
-# using quantized models with llama_cpp
-from llama_cpp import Llama
-
-#load the quantized model from hugging face
-#make sure the model file is in the same directory or provide the full path
-llm = Llama.from_pretrained(
-    repo_id="unsloth/gemma-3-1b-it-GGUF",
-    filename="gemma-3-1b-it-Q5_K_M.gguf")
-
-def summarize_paragraph(paragraph: str) -> str:
-    #generate a summary for the given paragraph
-    prompt = f"Summarize the following text concisely:\n\n{paragraph}\n\nSummary:"
-    
-    response = llm.create_chat_completion(
-        messages=[{"role": "user", "content": prompt}])
-
-    return response["choices"][0]["message"]["content"].strip()
-
-def enhance_query(query, num_variations=3):
-    num_variations = max(1, min(num_variations, 10))  #keep within valid range
-
-    prompt = (
-        f"rewrite the following search query in {num_variations} different ways to improve accuracy:\n\n"
-        f"Query: {query}\n\n"
-        f"Provide {num_variations} variations, each on a new line."
-    )
-    
-    output = llm(prompt, max_tokens=200)
-    
-    #extract and clean up the generated query variations
-    queries = output["choices"][0]["text"].strip().split("\n")
-    return [q.strip("- ").strip() for q in queries if q.strip()]
-
-#example usage
-query = "future of AI in healthcare"
-enhanced_queries = enhance_query(query, 5)
-
-print("Original Query:", query)
-print("Enhanced Queries:")
-for idx, q in enumerate(enhanced_queries, start=1):
-    print(f"{idx}. {q}")
-
-#standard python entry point
-if __name__ == "__main__":
-    text = """ Reductionistic and eliminative materialistic approaches, for example the Multiple Drafts Model, hold that consciousness can be wholly explained by neuroscience through the workings of the brain and its neurons, thus adhering to biological naturalism.[55][56][57]
+Meaning of life
+The meaning of life pertains to the inherent significance or philosophical meaning of living (or existence in general). There is no consensus on a definitive answer, and thinking or discourse on the topic is sought in the English language through the question, "What is the meaning of life?" (or the related "Why are we here?" or "What is the purpose of existence?"). There have been many proposed answers to these questions from many different cultural and ideological backgrounds. The search for life's meaning has produced much philosophical, scientific, theological, and metaphysical speculation throughout history. Different people and cultures believe different things for the answer to this question. Opinions vary on the usefulness of using time and resources in the pursuit of an answer. Excessive pondering can be indicative of, or lead to, an existential crisis.
+The meaning of life can be derived from philosophical and religious contemplation of, and scientific inquiries about, existence, social ties, consciousness, and happiness. Many other issues are also involved, such as symbolic meaning, ontology, value, purpose, ethics, good and evil, free will, the existence of one or multiple gods, conceptions of God, the soul, and the afterlife. Scientific contributions focus primarily on describing related empirical facts about the universe, exploring the context and parameters concerning the "how" of life. Science also studies and can provide recommendations for the pursuit of well-being and a related conception of morality. An alternative, humanistic approach poses the question, "What is the meaning of my life?"
+Origin of the expression
+The first English use of the expression "meaning of life" appears in Thomas Carlyle's Sartor Resartus (1833–1834), book II chapter IX, "The Everlasting Yea".[1]
+Our Life is compassed round with Necessity; yet is the meaning of Life itself no other than Freedom, than Voluntary Force: thus have we a warfare; in the beginning, especially, a hard-fought battle.[2]
+Carlyle may have been inspired by earlier usage of the equivalent German expression der Sinn des Lebens by German Romantic writers Novalis and Friedrich Schlegel. Schlegel was the first to use it in print by way of his novel Lucinde (1799), though Novalis had done so in a 1797–1798 manuscript, in which he wrote: "Only an artist can divine the meaning of life." Additionally, the word lebenssinn, translated as life's meaning, had been used by Goethe in a 1796 letter to Schiller.[3] These authors grappled with the rationalism and materialism of modernity. Carlyle called this the "Torch of Science", which burned "more fiercely than ever" and made religion "all parched away, under the Droughts of practical and spiritual Unbelief", resulting in the "Wilderness" of "the wide World in an Atheistic Century".[4]
+Origin of the question
+Arthur Schopenhauer was the first to explicitly ask the question,[1] in an essay entitled "Character".
+Since a man does not alter, and his moral character remains absolutely the same all through his life; since he must play out the part which he has received, without the least deviation from the character; since neither experience, nor philosophy, nor religion can effect any improvement in him, the question arises, What is the meaning of life at all? To what purpose is it played, this farce in which everything that is essential is irrevocably fixed and determined?[5]
+Questions about the meaning of life, and similar, have been expressed in a broad variety of other ways, including:
+- What is the meaning of life? What's it all about? Who are we?[6][7][8]
+- Why are we here? What are we here for?[9][10][11]
+- What is the origin of life?[12]
+- What is the nature of life? What is the nature of reality?[12][13][14]
+- What is the purpose of life? What is the purpose of one's life?[13][15][16]
+- What is the significance of life?[16] (See also #Psychological significance and value in life)
+- What is meaningful and valuable in life?[17]
+- What is the value of life?[18]
+- What is the reason to live? What are we living for?[11][19]
+These questions have resulted in a wide range of competing answers and explications, from scientific theories, to philosophical, theological, and spiritual explanations.
+Scientific inquiry and perspectives
+Many members of the scientific community and philosophy of science communities think that science can provide the relevant context, and set of parameters necessary for dealing with topics related to the meaning of life. In their view, science can offer a wide range of insights on topics ranging from the science of happiness to death anxiety. Scientific inquiry facilitates this through nomological investigation into various aspects of life and reality, such as the Big Bang, the origin of life, and evolution, and by studying the objective factors which correlate with the subjective experience of meaning and happiness.
+Psychological significance and value in life
+Researchers in positive psychology study empirical factors that lead to life satisfaction,[20] full engagement in activities,[21] making a fuller contribution by using one's personal strengths,[22] and meaning based on investing in something larger than the self.[23] Large-data studies of flow experiences have consistently suggested that humans experience meaning and fulfillment when mastering challenging tasks and that the experience comes from the way tasks are approached and performed rather than the particular choice of task. For example, flow experiences can be obtained by prisoners in concentration camps with minimal facilities, and occur only slightly more often in billionaires. A classic example[21] is of two workers on an apparently boring production line in a factory. One treats the work as a tedious chore while the other turns it into a game to see how fast they can make each unit and achieves flow in the process.
+Neuroscience describes reward, pleasure, and motivation in terms of neurotransmitter activity, especially in the limbic system and the ventral tegmental area in particular. If one believes that the meaning of life is to maximize pleasure and to ease general life, then this allows normative predictions about how to act to achieve this. Likewise, some ethical naturalists advocate a science of morality—the empirical pursuit of flourishing for all conscious creatures.
+Experimental philosophy and neuroethics research collects data about human ethical decisions in controlled scenarios such as trolley problems. It has shown that many types of ethical judgment are universal across cultures, suggesting that they may be innate, whilst others are culture-specific. The findings show actual human ethical reasoning to be at odds with most philosophical theories, for example consistently showing distinctions between action by cause and action by omission which would be absent from utility-based theories. Cognitive science has theorized about differences between conservative and liberal ethics and how they may be based on different metaphors from family life such as strong fathers vs nurturing mother models.
+Neurotheology is a controversial field which tries to find neural correlates and mechanisms of religious experience. Some researchers have suggested that the human brain has innate mechanisms for such experiences and that living without using them for their evolved purposes may be a cause of imbalance. Studies have reported conflicting results on correlating happiness with religious belief and it is difficult to find unbiased meta-analyses.[24][25]
+Sociology examines value at a social level using theoretical constructs such as value theory, norms, anomie, etc. One value system suggested by social psychologists, broadly called Terror Management Theory, states that human meaning is derived from a fundamental fear of death, and values are selected when they allow us to escape the mental reminder of death.
+Alongside this, there are a number of theories about the way in which humans evaluate the positive and negative aspects of their existence and thus the value and meaning they place on their lives. For example, depressive realism posits an exaggerated positivity in all except those experiencing depressive disorders who see life as it truly is, and David Benatar theorises that more weight is generally given to positive experiences, providing bias towards an over-optimistic view of life.
+Emerging research shows that meaning in life predicts better physical health outcomes. Greater meaning has been associated with a reduced risk of Alzheimer's disease,[26][27] reduced risk of heart attack among individuals with coronary heart disease,[28] reduced risk of stroke,[29] and increased longevity in both American and Japanese samples.[30] There is also growing evidence for a small decline in purpose in life in the early stages of cognitive impairment.[31]
+In 2014, the British National Health Service began recommending a five-step plan for mental well-being based on meaningful lives, whose steps are:[32]
+- Connect with community and family
+- Physical exercise
+- Lifelong learning
+- Giving to others
+- Mindfulness of the world around you
+Origin and nature of biological life
+The exact mechanisms of abiogenesis are unknown: notable hypotheses include the RNA world hypothesis (RNA-based replicators) and the iron-sulfur world hypothesis (metabolism without genetics). The process by which different lifeforms have developed throughout history via genetic mutation and natural selection is explained by evolution.[33] At the end of the 20th century, based upon insight gleaned from the gene-centered view of evolution, biologists George C. Williams, Richard Dawkins, and David Haig, among others, concluded that if there is a primary function to life, it is the replication of DNA and the survival of one's genes.[34][35] Responding to an interview question from Richard Dawkins about "what it is all for", James Watson stated "I don't think we're for anything. We're just the products of evolution."[36]
+Though scientists have intensively studied life on Earth, defining life in unequivocal terms is still a challenge.[37][38] Physically, one may say that life "feeds on negative entropy"[39][40][41] which refers to the process by which living entities decrease their internal entropy at the expense of some form of energy taken in from the environment.[42][43][44] Biologists generally agree that lifeforms are self-organizing systems which regulate their internal environments as to maintain this organized state, metabolism serves to provide energy, and reproduction causes life to continue over a span of multiple generations. Typically, organisms are responsive to stimuli and genetic information changes from generation to generation, resulting in adaptation through evolution; this optimizes the chances of survival for the individual organism and its descendants respectively.[45]
+Non-cellular replicating agents, notably viruses, are generally not considered to be organisms because they are incapable of independent reproduction or metabolism. This classification is problematic, though, since some parasites and endosymbionts are also incapable of independent life. Astrobiology studies the possibility of different forms of life on other worlds, including replicating structures made from materials other than DNA.
+All forms of life that are in existence today possess a self-replicating informational molecule (genome), and such an informational molecule is presumably intrinsic to life. Thus the earliest forms of life also likely possessed a self-replicating informational molecule, possibly RNA[46][47] or perhaps an informational molecule more primitive than RNA. The specific genomic sequences in all currently extant organisms contain order generating information that promotes survival, reproduction, and the ability to acquire resources necessary for reproduction. Sequences with such basic functions probably emerged early in the evolution of life.
+It has been proposed[48] that both the evolution of macroscopic order in life (including its basic functions) and the evolution of order in particular physical systems obey a common fundamental principle that was termed the Darwinian dynamic. This principal was formulated by considering, first, how macroscopic order is generated in a simple physical, non-biological system far from thermodynamic equilibrium, and then extending consideration to short RNA replicating molecules and then further to more complex forms of life. It was concluded that the fundamental order-generating process was basically similar for both types of process.[48][49] Thus the idea that life likely emerged as a natural extension of simpler non- or pre-biological physical processes should logically be included in the concept "meaning of life".
+Origins and ultimate fate of the universe
+Though the Big Bang theory was met with much skepticism when first introduced, it has become well-supported by several independent observations.[50] However, current physics can only describe the early universe from around 10−43 seconds after the Big Bang (where zero time corresponds to infinite temperature); a theory of quantum gravity would be required to understand events before that time. Nevertheless, many physicists have speculated about what would have preceded this limit, and how the universe came into being.[51] For example, one interpretation is that the Big Bang occurred coincidentally, and when considering the anthropic principle, it is sometimes interpreted as implying the existence of a multiverse.[52]
+The ultimate fate of the universe, and implicitly of humanity, is hypothesized as one in which biological life will eventually become unsustainable, such as through a Big Freeze, Big Rip, or Big Crunch.
+Theoretical cosmology studies many alternative speculative models for the origin and fate of the universe beyond the Big Bang theory. A recent trend has been models of the creation of 'baby universes' inside black holes, with our own Big Bang being a white hole on the inside of a black hole in another parent universe.[53] Many-worlds theories claim that every possibility of quantum mechanics is played out in parallel universes.
+Scientific questions about the mind
+The nature and origin of consciousness and the mind are also widely debated in science. The explanatory gap is generally equated with the hard problem of consciousness, and the question of free will is also considered to be of fundamental importance. These subjects are mostly addressed in the fields of cognitive science, neuroscience (e.g. the neuroscience of free will) and philosophy of mind, though some evolutionary biologists and theoretical physicists have also made several allusions to the subject.[54][55]
+Reductionistic and eliminative materialistic approaches, for example the Multiple Drafts Model, hold that consciousness can be wholly explained by neuroscience through the workings of the brain and its neurons, thus adhering to biological naturalism.[55][56][57]
 On the other hand, some scientists, like Andrei Linde, have considered that consciousness, like spacetime, might have its own intrinsic degrees of freedom, and that one's perceptions may be as real as (or even more real than) material objects.[58] Hypotheses of consciousness and spacetime explain consciousness in describing a "space of conscious elements",[58] often encompassing a number of extra dimensions.[59] Electromagnetic theories of consciousness solve the binding problem of consciousness in saying that the electromagnetic field generated by the brain is the actual carrier of conscious experience; there is however disagreement about the implementations of such a theory relating to other workings of the mind.[60][61] Quantum mind theories use quantum theory in explaining certain properties of the mind. Explaining the process of free will through quantum phenomena is an alternative to determinism.
 Parapsychology
 Based on the premises of non-materialistic explanations of the mind, some have suggested the existence of a cosmic consciousness, asserting that consciousness is actually the "ground of all being".[14][62][63] Proponents of this view cite accounts of paranormal phenomena, primarily extrasensory perceptions and psychic powers, as evidence for an incorporeal higher consciousness. In hopes of proving the existence of these phenomena, parapsychologists have orchestrated various experiments, but successful results might be due to poor experimental controls and might have alternative explanations.[64][65][66][67]
@@ -645,5 +650,4 @@ That's it. Six by nine… forty-two! I always said there was something fundament
 - ^ Benatar, David (5 May 2017). "3. Meaninglessness". The Human Predicament: A Candid Guide to Life's Biggest Questions. Oxford University Press. ISBN 978-0-19-063382-0.
 - ^ Benbaji, Yitzhak (2001). "The Moral, the Personal, and the Importance of What We Care about". Philosophy. 76 (297): 415–433. doi:10.1017/S0031819101000365. ISSN 0031-8191. JSTOR 3751779. S2CID 143737564.
 - ^ Tugendhat, Ernst (4 October 2016). "2. "Good" and "Important"". Egocentricity and Mysticism: An Anthropological Study. Columbia University Press. ISBN 978-0-231-54293-7.
-- ^ Morris, Chris (28 March 2016). "10 wonder drugs that changed our lives forever". CNBC. Retrieved 24 June 2022.j """  #add text to summarize here
-    print(summarize_paragraph(text))
+- ^ Morris, Chris (28 March 2016). "10 wonder drugs that changed our lives forever". CNBC. Retrieved 24 June 2022.
