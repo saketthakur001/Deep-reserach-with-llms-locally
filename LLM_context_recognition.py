@@ -4,6 +4,7 @@ from transformers import pipeline
 model_id = "google/gemma-3-1b-it"
 summarizer = pipeline("summarization", model=model_id, device=0, torch_dtype="bfloat16")
 
+
 text = """
 The lms command is part of LM Studio's CLI tool and needs to be set up properly before use. Here's how you can install and configure it:
 Steps to Install and Set Up lms CLI
