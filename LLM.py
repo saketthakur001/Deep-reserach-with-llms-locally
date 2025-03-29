@@ -1,4 +1,5 @@
 # using quantized models with llama_cpp
+import json
 from llama_cpp import Llama
 
 #quantized model from hugging face
@@ -43,48 +44,20 @@ def summarize_paragraph(paragraph: str) -> str:
     # print(response["choices"][0]["message"]["content"].strip())
     return response["choices"][0]["message"]["content"].strip()
 
-
-def enhance_query(query, num_variations=3):
-    num_variations = max(1, min(num_variations, 10))  #keep within valid range
-
-    prompt = (
-        f"rewrite the following search query in {num_variations} different ways to improve accuracy:\n\n"
-        f"Query: {query}\n\n"
-        f"Provide {num_variations} variations, each on a new line."
-    )
-    
-    output = llm(prompt, max_tokens=200)
-    
-    #extract and clean up the generated query variations
-    queries = output["choices"][0]["text"].strip().split("\n")
-    return [q.strip("- ").strip() for q in queries if q.strip()]
-
 def enhance_query_into_two(query: str) -> list:
-    """
-    Enhance a search query by rewriting it into two variations.
-    If the query is complex, break it into two simpler queries.
-    """
     prompt = (
         f"Rewrite the following search query into multiple improved versions. "
         f"If the query is complex, break it into two or multiple separate queries that capture its different aspects.\n\n"
         f"Query: {query}\n\n"
         f"Provide all variations, each on a new line."
+        f"example:- this is an example query"
     )
     
     response = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}])
     #The response might include bullet points or other formatting, so we do a basic cleanup:
-    queries = response["choices"][0]["message"]["content"].strip().split("\n")
-    return [q.strip("- ").strip() for q in queries if q.strip()]
+    queries = response["choices"][0]["message"]["content"].strip().split("\n")[2:]
+    return [q.strip("- ").strip("* ").strip() for q in queries if q.strip()]
 
-# if __name__ == "__main__":
-#     original_query = "How does AI impact modern healthcare policies and what future trends should we expect?"
-#     variations = enhance_query_into_two(original_query)
-#     print("Enhanced Queries:")
-#     for idx, q in enumerate(variations, start=1):
-#         print(f"{idx}. {q}")
-
-
-# print(__name__)
 
 #standard python entry point
 if __name__ == "__main__":
@@ -92,7 +65,7 @@ if __name__ == "__main__":
     # print(summarize_paragraph(text))
 
     #testinng enhanced query
-    print(enhance_query_into_two('what is the meaning of life?'))
+    print(enhance_query_into_two('why do cats don\'t spit their milk?'))
 
 
     #example usage
