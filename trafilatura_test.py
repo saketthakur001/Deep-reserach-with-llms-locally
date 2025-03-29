@@ -23,12 +23,15 @@
 #     print(article_text) 
 
 
+# text = "This is a test sentence? Here is another one. And one more after that."
+# print(truncate_text_by_words(text, ))
+
 import LLM
 
 page = "article_text.txt"
 with open(page, "r", encoding="utf-8") as f:
     article_text = f.read()
-
-print(LLM.summarize_paragraph(article_text[:100]))
+print(truncate_text_by_words(article_text, 1000))
+print(LLM.summarize_paragraph(truncate_text_by_words(article_text, 1000)))
 
 # print(LLM.llm.tokenize(article_text))
