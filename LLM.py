@@ -34,6 +34,8 @@ def truncate_text_by_words(text, word_limit):
 
     return truncated_text.strip()
 
+
+
 def summarize_paragraph(paragraph: str) -> str:
     #generate a summary for the given paragraph
     prompt = f"Summarize the following text concisely:\n\n{paragraph}\n\n compressed version:"
@@ -43,6 +45,7 @@ def summarize_paragraph(paragraph: str) -> str:
     print('numb bals'*100)
     # print(response["choices"][0]["message"]["content"].strip())
     return response["choices"][0]["message"]["content"].strip()
+
 
 def enhance_query_into_two(query: str) -> list:
     prompt = (
@@ -59,15 +62,16 @@ def enhance_query_into_two(query: str) -> list:
     return [q.strip("- ").strip("* ").strip() for q in queries if q.strip()]
 
 
+
 #standard python entry point
 if __name__ == "__main__":
     text = """ testinng fomr text"""
     # print(summarize_paragraph(text))
 
     #testinng enhanced query
-    print(enhance_query_into_two('why do cats don\'t spit their milk?'))
+    print(enhance_query_into_two('why do cats don\'t spill their milk?'))
 
-
+    
     #example usage
     # query = "future of AI in healthcare"
     # enhanced_queries = enhance_query(query, 5)
