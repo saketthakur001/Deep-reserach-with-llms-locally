@@ -1,8 +1,16 @@
 import requests
 import os
+import keyring
 
-api_key = os.getenv("api_key")
-cx = os.getenv("cx")
+# keyring.set_password("google_search_api", 'user1', "your key")
+# keyring.set_password("search_engine_id", 'user1', "your id")
+
+api_key = keyring.get_password("gemini_key", "user1")
+cx = keyring.get_password("search_engine_id", "user1")
+    
+print(api_key,cx)
+
+# api_key = os.getenv("api_key")
 
 def google_search_api(query, api_key, cx, num_results=10):
     """
