@@ -41,7 +41,7 @@ def research_query(query: str):
                 article_data = web_crawler.extract_article_content_with_newspaper(html_content, result["link"])
                 all_article_content.append(article_data["text"])
             except Exception as e:
-                print(f"Error crawling {result["link"]}: {e}")
+                print(f"Error crawling {result['link']}: {e}")
         print(f"Total Articles Crawled: {len(all_article_content)}")
 
         # 4. Summarize and synthesize the extracted information
