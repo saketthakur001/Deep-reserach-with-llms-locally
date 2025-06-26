@@ -1,16 +1,49 @@
-# using quantized models with llama_cpp
-from llama_cpp import Llama
 import json
+import keyring
+from llama_cpp import Llama
+import logging
 
-#quantized model from hugging face
-# make sure the model file is in the same directory or provide the full path context widnow max
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Local LLM initialization (kept for fallback)
 llm = Llama.from_pretrained(
     repo_id="unsloth/gemma-3-1b-it-GGUF",
     filename="gemma-3-1b-it-Q5_K_M.gguf",
     n_ctx=20000
-    )
+)
+
+def _get_gemini_model():
+    try:
+        api_key = keyring.get_password("gemini_key", "user1")
+        if not api_key:
+            logging.warning("GEMINI_API_KEY not found in keyring. Falling back to local LLM.")
+            return None
+        genai.configure(api_key=api_key)
+        return genai.GenerativeModel('gemma-3-12b-it') # Using gemma-3-12b-it as requested
+    except Exception as e:
+        logging.error(f"Error configuring Gemini API: {e}. Falling back to local LLM.")
+        return None
 
 def enhance_query_into_two(query: str) -> list:
+    gemini_model = _get_gemini_model()
+    if gemini_model:
+        try:
+            logging.info("Using Gemini for query enhancement.")
+            prompt = (
+                f"Rewrite the following search query into multiple improved versions. "
+                f"If the query is complex, break it into two or multiple separate queries that capture its different aspects.\n\n"
+                f"Query: {query}\n\n"
+                f"Provide all variations, each on a new line."
+                f"example:- this is an example query"
+            )
+            response = gemini_model.generate_content(prompt)
+            queries = response.text.strip().split("\n")
+            return [q.strip("- ").strip("* ").strip() for q in queries if q.strip()]
+        except Exception as e:
+            logging.error(f"Gemini query enhancement failed: {e}. Falling back to local LLM.")
+
+    logging.info("Using local LLM for query enhancement.")
     prompt = (
         f"Rewrite the following search query into multiple improved versions. "
         f"If the query is complex, break it into two or multiple separate queries that capture its different aspects.\n\n"
@@ -18,17 +51,32 @@ def enhance_query_into_two(query: str) -> list:
         f"Provide all variations, each on a new line."
         f"example:- this is an example query"
     )
-    
     response = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}])
-    #The response might include bullet points or other formatting, so we do a basic cleanup:
     queries = response["choices"][0]["message"]["content"].strip().split("\n")[2:]
     return [q.strip("- ").strip("* ").strip() for q in queries if q.strip()]
 
 def classify_query_type(query: str) -> dict:
-    """
-    Classifies the query as a 'person' search or 'general' research.
-    If 'person', it extracts the person's name and any initial context.
-    """
+    gemini_model = _get_gemini_model()
+    if gemini_model:
+        try:
+            logging.info("Using Gemini for query classification.")
+            prompt = f"""Analyze the following query and determine if it is primarily a request for information about a specific person.
+            If it is, extract the person's full name and any additional context provided about them (e.g., what they are known for).
+            
+            Query: {query}
+
+            Provide the output in JSON format with 'query_type' (either "person" or "general").
+            If 'query_type' is "person", also include 'person_name' and 'initial_context' (a string describing what they are known for).
+            
+            Example for person: {{\"query_type\": \"person\", \"person_name\": \"Marie Curie\", \"initial_context\": \"famous scientist, Nobel Prize winner\"}}
+            Example for general: {{\"query_type\": \"general\"}}
+            """
+            response_text = gemini_model.generate_content(prompt).text.strip()
+            return json.loads(response_text)
+        except Exception as e:
+            logging.error(f"Gemini query classification failed: {e}. Falling back to local LLM.")
+
+    logging.info("Using local LLM for query classification.")
     prompt = f"""Analyze the following query and determine if it is primarily a request for information about a specific person.
     If it is, extract the person's full name and any additional context provided about them (e.g., what they are known for).
     
@@ -44,7 +92,7 @@ def classify_query_type(query: str) -> dict:
     try:
         return json.loads(response_text)
     except json.JSONDecodeError:
-        print(f"Warning: Could not parse LLM response for query classification: {response_text}")
+        logging.warning(f"Could not parse local LLM response for query classification: {response_text}")
         return {"query_type": "general"}
 
 #standard python entry point

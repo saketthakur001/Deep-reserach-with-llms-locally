@@ -2,6 +2,10 @@ import keyring
 from google import genai
 from transformers import AutoTokenizer, PegasusForConditionalGeneration
 from LLM import llm
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def summarize_with_gemini(text: str) -> str:
   """
@@ -17,23 +21,27 @@ def summarize_with_gemini(text: str) -> str:
   try:
     api_key = keyring.get_password("gemini_key", "user1")
     if not api_key:
-        return "Error: GEMINI_API_KEY environment variable not set."
+        logging.warning("GEMINI_API_KEY not found in keyring. Falling back to local LLM for summarization.")
+        return summarize_with_local_llm(text)
 
     genai.configure(api_key=api_key)
 
-    model = genai.GenerativeModel('gemma-3-12b-it')
+    model = genai.GenerativeModel('gemma-3-12b-it') # Using gemma-3-12b-it as requested
 
     prompt = f"Please provide a concise summary of the following text:\n\n{text}"
 
     response = model.generate_content(prompt)
 
     if response and response.text:
+      logging.info("Using Gemini for summarization.")
       return response.text
     else:
-      return "Error: Could not generate summary. Response might be empty or filtered."
+      logging.warning("Gemini summarization failed or returned empty response. Falling back to local LLM.")
+      return summarize_with_local_llm(text)
 
   except Exception as e:
-    return f"An error occurred: {e}"
+    logging.error(f"An error occurred during Gemini summarization: {e}. Falling back to local LLM.")
+    return summarize_with_local_llm(text)
 
 def summarize_with_pegasus(text: str) -> str:
     """
