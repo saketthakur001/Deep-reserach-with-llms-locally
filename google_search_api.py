@@ -53,7 +53,7 @@ if __name__ == "__main__":
     else:
         for i, result in enumerate(search_results):
             print(f"Result {i+1}:")
-            print(f"  Title: {result["title"]}")
-            print(f"  Link: {result["link"]}")
-            print(f"  Snippet: {result["snippet"]}")
+            print(f"  Title: {result['title']}")
+            print(f"  Link: {result['link']}")
+            print(f"  Snippet: {result['snippet']}")
             print("\n")
