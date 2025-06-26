@@ -1,0 +1,13 @@
+google-genai
+google-api-python-client
+keyring
+requests
+transformers
+llama-cpp-python
+torch
+sentencepiece
+playwright
+newspaper4k
+trafilatura
+accelerate
+bitsandbytes

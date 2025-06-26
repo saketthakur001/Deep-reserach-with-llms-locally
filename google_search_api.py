@@ -1,14 +1,11 @@
-import requests
-import os
-import keyring
+# get the api key from here
+#https://programmablesearchengine.google.com/controlpanel/all
 
-# keyring.set_password("google_search_api", 'user1', "your key")
-# keyring.set_password("search_engine_id", 'user1', "your id")
+import requests
+import keyring
 
 api_key = keyring.get_password("gemini_key", "user1")
 cx = keyring.get_password("search_engine_id", "user1")
-    
-print(api_key,cx)
 
 # api_key = os.getenv("api_key")
 
@@ -49,5 +46,14 @@ def google_search_api(query, api_key, cx, num_results=10):
 
 #standard python entry point
 if __name__ == "__main__":
-    #example usage
-    print(google_search_api('what is the meaning of life?', api_key, cx))
+    # Example usage:
+    search_results = google_search_api('what is the meaning of life?', api_key, cx)
+    if "error" in search_results:
+        print(search_results["error"])
+    else:
+        for i, result in enumerate(search_results):
+            print(f"Result {i+1}:")
+            print(f"  Title: {result["title"]}")
+            print(f"  Link: {result["link"]}")
+            print(f"  Snippet: {result["snippet"]}")
+            print("\n")

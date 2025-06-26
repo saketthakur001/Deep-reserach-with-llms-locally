@@ -1,6 +1,6 @@
 # using quantized models with llama_cpp
-import json
 from llama_cpp import Llama
+import json
 
 #quantized model from hugging face
 # make sure the model file is in the same directory or provide the full path context widnow max
@@ -9,43 +9,6 @@ llm = Llama.from_pretrained(
     filename="gemma-3-1b-it-Q5_K_M.gguf",
     n_ctx=20000
     )
-
-
-import re
-
-def truncate_text_by_words(text, word_limit):
-    words = text.split()
-    print(len(words))
-    word_limit-=1
-    if len(words) <= word_limit:
-        return text #if text is alreay in light than return it
-
-    truncated_words = words[:word_limit]
-
-    #serach for the next sentese
-    remaining_text = " ".join(words[word_limit:])
-    sentence_end = re.search(r"[.!?]", remaining_text)
-
-    if sentence_end:
-        end_index = sentence_end.end()  #include the full sentense 
-        truncated_text = " ".join(truncated_words) + " " + remaining_text[:end_index]
-    else:
-        truncated_text = " ".join(truncated_words)  #if no sentese end.
-
-    return truncated_text.strip()
-
-
-
-def summarize_paragraph(paragraph: str) -> str:
-    #generate a summary for the given paragraph
-    prompt = f"Summarize the following text concisely:\n\n{paragraph}\n\n compressed version:"
-    
-    response = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}])
-    
-    print('numb bals'*100)
-    # print(response["choices"][0]["message"]["content"].strip())
-    return response["choices"][0]["message"]["content"].strip()
-
 
 def enhance_query_into_two(query: str) -> list:
     prompt = (
@@ -61,23 +24,32 @@ def enhance_query_into_two(query: str) -> list:
     queries = response["choices"][0]["message"]["content"].strip().split("\n")[2:]
     return [q.strip("- ").strip("* ").strip() for q in queries if q.strip()]
 
+def classify_query_type(query: str) -> dict:
+    """
+    Classifies the query as a 'person' search or 'general' research.
+    If 'person', it extracts the person's name and any initial context.
+    """
+    prompt = f"""Analyze the following query and determine if it is primarily a request for information about a specific person.
+    If it is, extract the person's full name and any additional context provided about them (e.g., what they are known for).
+    
+    Query: {query}
 
+    Provide the output in JSON format with 'query_type' (either "person" or "general").
+    If 'query_type' is "person", also include 'person_name' and 'initial_context' (a string describing what they are known for).
+    
+    Example for person: {{\"query_type\": \"person\", \"person_name\": \"Marie Curie\", \"initial_context\": \"famous scientist, Nobel Prize winner\"}}
+    Example for general: {{\"query_type\": \"general\"}}
+    """
+    response_text = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}])["choices"][0]["message"]["content"].strip()
+    try:
+        return json.loads(response_text)
+    except json.JSONDecodeError:
+        print(f"Warning: Could not parse LLM response for query classification: {response_text}")
+        return {"query_type": "general"}
 
 #standard python entry point
 if __name__ == "__main__":
-    text = """ testinng fomr text"""
-    # print(summarize_paragraph(text))
-
     #testinng enhanced query
     print(enhance_query_into_two('why do cats don\'t spill their milk?'))
-
-    
-    #example usage
-    # query = "future of AI in healthcare"
-    # enhanced_queries = enhance_query(query, 5)
-
-    # print("Original Query:", query)
-    # print("Enhanced Queries:")
-    # for idx, q in enumerate(enhanced_queries, start=1):
-    #     print(f"{idx}. {q}")
-
+    print(classify_query_type("Tell me about Elon Musk, the CEO of Tesla."))
+    print(classify_query_type("What is the capital of France?"))
