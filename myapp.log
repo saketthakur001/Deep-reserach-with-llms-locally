@@ -1,0 +1,150 @@
+2025-06-26 23:38:57,656 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-06-26 23:40:49,000 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-06-26 23:40:57,371 - ERROR - Error configuring Gemini API: name 'genai' is not defined. Falling back to local LLM.
+2025-06-26 23:40:57,371 - INFO - Using local LLM for query classification.
+2025-06-26 23:41:00,459 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "unknown",
+  "initial_context": "unknown"
+}
+```
+2025-06-26 23:41:00,459 - INFO - Detected general research query.
+2025-06-26 23:41:00,471 - ERROR - Error configuring Gemini API: name 'genai' is not defined. Falling back to local LLM.
+2025-06-26 23:41:00,471 - INFO - Using local LLM for query enhancement.
+2025-06-26 23:41:04,753 - INFO - Enhanced Queries: ['What is "hey"?', 'Hello, can you help me?', "Hey, what's up?", 'Hey there!', 'Hi!', 'Greetings!', 'Hey, how are you?', 'Just wanted to say hi.', "Hey, what's the weather like?", 'Hey, can you tell me something?', 'Hey, I need some assistance.', 'Hey, just checking in.', 'Hey!']
+2025-06-26 23:41:10,304 - INFO - Total Search Results: 130
+2025-06-26 23:41:16,299 - WARNING - No article content extracted from https://www.merriam-webster.com/dictionary/hey
+2025-06-26 23:41:31,914 - WARNING - error while fetching: https://id.rlcdn.com/472486.gif refer: https://www.reddit.com/r/EnglishLearning/comments/ll5udi/what_is_the_difference_between_hi_and_hey_when/
+2025-06-26 23:41:39,838 - ERROR - Error crawling https://www.facebook.com/Fultonleemusic/posts/she-blew-me-away-her-name-is-hey-kyaira-and-we-made-this-into-a-full-track-and-r/1294596936004642/: You must install indic-nlp-library before using the Hindi tokenizer. 
+Try pip install indic-nlp-library
+or pip install newspaper4k[hi]
+or pip install newspaper4k[all]
+
+2025-06-26 23:41:44,156 - WARNING - error while fetching: https://id.rlcdn.com/472486.gif refer: https://www.reddit.com/r/beatles/comments/4ldlse/what_is_hey_jude_about/
+2025-06-26 23:42:00,165 - ERROR - Error crawling https://www.facebook.com/sofitukker/posts/we-didnt-originally-write-hey-homie-about-each-other-but-for-the-video-we-wanted/1021465669339244/: You must install indic-nlp-library before using the Hindi tokenizer. 
+Try pip install indic-nlp-library
+or pip install newspaper4k[hi]
+or pip install newspaper4k[all]
+
+2025-06-26 23:42:52,828 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-06-26 23:42:58,300 - ERROR - Error configuring Gemini API: name 'genai' is not defined. Falling back to local LLM.
+2025-06-26 23:42:58,301 - INFO - Using local LLM for query classification.
+2025-06-26 23:43:01,840 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "saketthakur001",
+  "initial_context": "saketthakur001"
+}
+```
+2025-06-26 23:43:01,840 - INFO - Detected general research query.
+2025-06-26 23:43:01,852 - ERROR - Error configuring Gemini API: name 'genai' is not defined. Falling back to local LLM.
+2025-06-26 23:43:01,852 - INFO - Using local LLM for query enhancement.
+2025-06-26 23:43:06,177 - INFO - Enhanced Queries: ['Saketthakur', 'Saketthakur001', 'Saketthakur -profile', 'Saketthakur details', 'Saketthakur contact', 'Saketthakur information', 'Saketthakur account', 'Saketthakur login', 'Saketthakur email', 'Saketthakur website', 'Saketthakur social media', 'Saketthakur career']
+2025-06-26 23:43:11,984 - INFO - Total Search Results: 114
+2025-06-26 23:43:32,887 - WARNING - No article content extracted from https://www.facebook.com/people/Saket-Thakur/61566391281214/
+2025-06-26 23:43:51,245 - WARNING - No article content extracted from https://www.facebook.com/saketthakurABY/
+2025-06-26 23:44:22,460 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:44:26,250 - WARNING - No article content extracted from https://www.facebook.com/people/Saket-Thakur/100077475056096/
+2025-06-26 23:45:33,640 - ERROR - Error crawling https://www.pinterest.com/pin/672514156837671484/: Timeout 30000ms exceeded.
+2025-06-26 23:45:46,377 - WARNING - No article content extracted from https://www.tripadvisor.com/ShowUserReviews-g6513417-d20373877-r862113966-OYO_760_Hotel_Hicola_Heritage-Kakarvitta_Eastern_Region.html
+2025-06-26 23:45:54,355 - ERROR - Error crawling https://www.justdial.com/Vaishali/Home-Stay-in-Jandaha/nct-10835911: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.justdial.com/Vaishali/Home-Stay-in-Jandaha/nct-10835911
+Call log:
+  - navigating to "https://www.justdial.com/Vaishali/Home-Stay-in-Jandaha/nct-10835911", waiting until "load"
+
+2025-06-26 23:45:56,247 - WARNING - No article content extracted from https://ieeexplore.ieee.org/iel8/10723818/10723316/10725451.pdf
+2025-06-26 23:45:58,363 - WARNING - No article content extracted from https://www.tripadvisor.com/ShowUserReviews-g6513417-d20373877-r864635136-OYO_760_Hotel_Hicola_Heritage-Kakarvitta_Eastern_Region.html
+2025-06-26 23:45:59,513 - ERROR - Error crawling https://www.thenrai.in/PDF/72c5eb7d-14f3-4b7c-a982-3c7c8286b269.pdf: Page.goto: net::ERR_ABORTED at https://www.thenrai.in/PDF/72c5eb7d-14f3-4b7c-a982-3c7c8286b269.pdf
+Call log:
+  - navigating to "https://www.thenrai.in/PDF/72c5eb7d-14f3-4b7c-a982-3c7c8286b269.pdf", waiting until "load"
+
+2025-06-26 23:46:03,411 - WARNING - No article content extracted from https://www.facebook.com/people/Saket-Thakur/61566391281214/
+2025-06-26 23:46:15,540 - WARNING - No article content extracted from https://www.facebook.com/saketthakurABY/
+2025-06-26 23:46:47,000 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:47:03,557 - WARNING - No article content extracted from https://www.tripadvisor.com/ShowUserReviews-g6513417-d20373877-r862113966-OYO_760_Hotel_Hicola_Heritage-Kakarvitta_Eastern_Region.html
+2025-06-26 23:47:05,340 - WARNING - No article content extracted from https://ieeexplore.ieee.org/document/10725451/
+2025-06-26 23:47:43,536 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:47:48,632 - WARNING - No article content extracted from https://www.facebook.com/people/Saket-Thakur/61566391281214/
+2025-06-26 23:48:10,860 - WARNING - No article content extracted from https://www.tripadvisor.com/ShowUserReviews-g6513417-d20373877-r862113966-OYO_760_Hotel_Hicola_Heritage-Kakarvitta_Eastern_Region.html
+2025-06-26 23:48:44,014 - ERROR - Error crawling https://www.zoominfo.com/p/Sp-Dayanand/9880376695: Timeout 30000ms exceeded.
+2025-06-26 23:48:46,271 - WARNING - No article content extracted from https://ieeexplore.ieee.org/document/10725451/
+2025-06-26 23:49:26,333 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:49:29,916 - WARNING - No article content extracted from https://www.facebook.com/people/Saket-Thakur/61566391281214/
+2025-06-26 23:49:31,757 - WARNING - No article content extracted from https://ieeexplore.ieee.org/document/10725451/
+2025-06-26 23:49:35,108 - WARNING - No article content extracted from https://www.facebook.com/groups/421724026161430/posts/1119959086337917/
+2025-06-26 23:49:46,221 - ERROR - Error crawling https://upsconline.gov.in/ESEP-25-WR-NamelList-200625-Engl.pdf: Page.goto: net::ERR_ABORTED at https://upsconline.gov.in/ESEP-25-WR-NamelList-200625-Engl.pdf
+Call log:
+  - navigating to "https://upsconline.gov.in/ESEP-25-WR-NamelList-200625-Engl.pdf", waiting until "load"
+
+2025-06-26 23:49:52,006 - ERROR - Error crawling https://www.justdial.com/Jabalpur/Rajesh-Furniture-Garha/9999PX761-X761-110208230942-L9V3_BZDET?srcterm=Rajesh%2520Furniture&predocid=9999PX761.X761.211213114624.V7D5: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.justdial.com/Jabalpur/Rajesh-Furniture-Garha/9999PX761-X761-110208230942-L9V3_BZDET?srcterm=Rajesh%2520Furniture&predocid=9999PX761.X761.211213114624.V7D5
+Call log:
+  - navigating to "https://www.justdial.com/Jabalpur/Rajesh-Furniture-Garha/9999PX761-X761-110208230942-L9V3_BZDET?srcterm=Rajesh%2520Furniture&predocid=9999PX761.X761.211213114624.V7D5", waiting until "load"
+
+2025-06-26 23:50:31,762 - ERROR - Error crawling https://in.linkedin.com/in/saket-thakur-491b00236: Timeout 30000ms exceeded.
+=========================== logs ===========================
+"commit" event fired
+"domcontentloaded" event fired
+"load" event fired
+============================================================
+2025-06-26 23:50:47,964 - WARNING - No article content extracted from https://www.facebook.com/saket.thakur.986227/
+2025-06-26 23:51:19,069 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:51:21,214 - WARNING - No article content extracted from https://ieeexplore.ieee.org/document/10725451/
+2025-06-26 23:51:27,459 - WARNING - No article content extracted from https://www.goodreads.com/quotes/9122976-the-ability-to-speak-is-a-shortcut-to-distinction-it
+2025-06-26 23:51:46,837 - WARNING - No article content extracted from https://uk.linkedin.com/in/saket-thakur-2b1b6620
+2025-06-26 23:51:50,709 - WARNING - No article content extracted from https://www.facebook.com/people/Saket-Thakur/61566391281214/
+2025-06-26 23:52:35,647 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:52:51,225 - WARNING - No article content extracted from https://www.goodreads.com/quotes/9122976-the-ability-to-speak-is-a-shortcut-to-distinction-it
+2025-06-26 23:52:55,044 - WARNING - No article content extracted from https://www.facebook.com/people/Saket-Thakur/61566391281214/
+2025-06-26 23:53:26,174 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:53:29,092 - WARNING - No article content extracted from https://www.facebook.com/groups/421724026161430/posts/1119959086337917/
+2025-06-26 23:54:20,860 - ERROR - Error crawling https://www.zoominfo.com/p/Sp-Dayanand/9880376695: Timeout 30000ms exceeded.
+2025-06-26 23:55:16,869 - ERROR - Error crawling https://in.linkedin.com/in/saket-thakur-94356a76: Timeout 30000ms exceeded.
+=========================== logs ===========================
+"commit" event fired
+"domcontentloaded" event fired
+"load" event fired
+============================================================
+2025-06-26 23:55:48,029 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:56:20,771 - ERROR - Error crawling https://in.linkedin.com/in/saket-thakur-491b00236: Timeout 30000ms exceeded.
+=========================== logs ===========================
+"commit" event fired
+"domcontentloaded" event fired
+"load" event fired
+============================================================
+2025-06-26 23:56:25,451 - WARNING - No article content extracted from https://ieeexplore.ieee.org/document/10725451/
+2025-06-26 23:56:32,910 - WARNING - No article content extracted from https://www.tripadvisor.com/ShowUserReviews-g6513417-d20373877-r862113966-OYO_760_Hotel_Hicola_Heritage-Kakarvitta_Eastern_Region.html
+2025-06-26 23:56:43,511 - WARNING - No article content extracted from https://developercommunity.visualstudio.com/t/enable-custom-ordering-in-product-backlog-and-spri/365421
+2025-06-26 23:56:54,063 - WARNING - No article content extracted from https://www.facebook.com/mobilelegendsgame/posts/visit-the-event-website-to-vote-for-your-favorite-season-of-love-videos-for-a-ch/3238040009592083/
+2025-06-26 23:57:24,705 - ERROR - Error crawling https://www.linkedin.com/pub/dir/Saket/Thakur: Timeout 30000ms exceeded.
+=========================== logs ===========================
+"commit" event fired
+"domcontentloaded" event fired
+"load" event fired
+============================================================
+2025-06-26 23:57:28,274 - WARNING - No article content extracted from https://www.facebook.com/people/Saket-Thakur/61566391281214/
+2025-06-26 23:58:03,932 - ERROR - Error crawling https://in.linkedin.com/in/saket-thakur-491b00236: Timeout 30000ms exceeded.
+=========================== logs ===========================
+"commit" event fired
+"domcontentloaded" event fired
+"load" event fired
+============================================================
+2025-06-26 23:58:48,154 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-26 23:59:32,564 - ERROR - Error crawling https://in.linkedin.com/in/saket-thakur-6bb14614b: Timeout 30000ms exceeded.
+=========================== logs ===========================
+"commit" event fired
+"domcontentloaded" event fired
+"load" event fired
+============================================================
+2025-06-27 00:00:07,860 - ERROR - Error crawling https://in.linkedin.com/in/saket-thakur-94356a76: Timeout 30000ms exceeded.
+=========================== logs ===========================
+"commit" event fired
+"domcontentloaded" event fired
+"load" event fired
+============================================================
+2025-06-27 00:00:11,263 - WARNING - No article content extracted from https://www.facebook.com/groups/169351090311739/posts/1695657274347772/
+2025-06-27 00:00:16,375 - WARNING - No article content extracted from https://www.facebook.com/groups/421724026161430/posts/1119959086337917/
+2025-06-27 00:00:48,857 - ERROR - Error crawling https://uk.linkedin.com/in/saket-thakur-2b1b6620: Timeout 30000ms exceeded.
+2025-06-27 00:01:25,278 - ERROR - Error crawling https://www.linkedin.com/posts/asia-research-partners_freshers-career-asiaresearchpartners-activity-7298641006378328065-YOAm: Timeout 30000ms exceeded.
+2025-06-27 00:01:56,121 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
+2025-06-27 00:01:59,004 - INFO - Total Articles Crawled: 57
+2025-06-27 00:01:59,017 - ERROR - An error occurred during Gemini summarization: module 'google.genai' has no attribute 'configure'. Falling back to local LLM.
