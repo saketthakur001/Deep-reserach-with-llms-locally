@@ -17,10 +17,10 @@ The project is in its early stages, with several key components already implemen
 The project is currently a collection of Python scripts, each responsible for a specific part of the research pipeline. Here's a breakdown of the existing components:
 
 *   **`main.py`**: The central entry point for the application. It orchestrates the entire research process, calling functions from other modules to perform query enhancement, web search, content crawling, and summarization.
-*   **`LLM.py`**: Handles interactions with a local, quantized LLM (Gemma 3.1B). It includes functions for enhancing user queries and classifying query types (e.g., "person" or "general").
+*   **`LLM.py`**: Handles interactions with LLMs for query enhancement and classification. It defaults to using the Gemini API (`gemma-3-12b-it`) and falls back to a local, quantized LLM (Gemma 3.1B) if the Gemini API is unavailable or encounters an error.
 *   **`google_search_api.py`**: Performs Google searches using the Custom Search JSON API. API keys are securely managed using `keyring`.
 *   **`web_crawler.py`**: Uses Playwright, `newspaper4k`, and `trafilatura` to crawl web pages and extract article content.
-*   **`summarizer.py`**: Contains functions for text summarization, including methods using the local LLM, Gemini API, and Pegasus model. `main.py` currently utilizes the local LLM for summarization.
+*   **`summarizer.py`**: Contains functions for text summarization, including methods using the Gemini API (`gemma-3-12b-it`), a local LLM, and the Pegasus model. `main.py` now defaults to using the Gemini API for summarization, with a fallback to the local LLM.
 *   **`person_researcher.py`**: Dedicated module for researching information about specific individuals.
 *   **`utils.py`**: Contains utility functions, such as text truncation.
 *   **`requirements.txt`**: Lists all project dependencies for easy installation.

@@ -1,7 +1,11 @@
 import time
 import random
 import json
+import keyring
+import google.generativeai as genai
 from llama_cpp import Llama
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage
 
 import web_crawler
 import google_search_api
@@ -14,8 +18,25 @@ llm = Llama.from_pretrained(
     n_ctx=20000
 )
 
-def _get_llm_response(prompt: str) -> str:
-    """Helper function to get response from the local LLM."""
+def _get_gemini_model():
+    try:
+        api_key = keyring.get_password("gemini_key", "user1")
+        if not api_key:
+            return None
+        genai.configure(api_key=api_key)
+        return ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=api_key)
+    except Exception:
+        return None
+
+def _get_llm_response(prompt: str, gemini_model=None) -> str:
+    """Helper function to get response from the LLM, preferring Gemini if available."""
+    if gemini_model:
+        try:
+            response = gemini_model.invoke([HumanMessage(content=prompt)])
+            return response.content.strip()
+        except Exception:
+            pass # Fallback to local LLM if Gemini fails
+
     response = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}])
     return response["choices"][0]["message"]["content"].strip()
 
@@ -24,14 +45,15 @@ def _classify_person_type(initial_context: dict) -> dict:
     Uses LLM to classify the person's type (e.g., famous, academic, professional)
     and suggest initial search keywords.
     """
+    gemini_model = _get_gemini_model()
     prompt = f"""Analyze the following initial context about a person and classify their likely type (e.g., "famous", "academic", "professional", "business", "local").
     Also, suggest initial relevant keywords for searching this person online.
     Initial context: {initial_context}
 
     Provide the output in a JSON format with 'person_type' and 'initial_keywords' (a list of strings).
-    Example: {{\"person_type\": \"famous\", \"initial_keywords\": [\"actor\", \"movies\", \"Hollywood\"]}}
+    Example: {{"person_type": "famous", "initial_keywords": ["actor", "movies", "Hollywood"]}}
     """
-    response_text = _get_llm_response(prompt)
+    response_text = _get_llm_response(prompt, gemini_model)
     try:
         return json.loads(response_text)
     except json.JSONDecodeError:
@@ -43,6 +65,7 @@ def _generate_dynamic_search_queries(person_name: str, person_type: str, current
     Generates dynamic search queries based on person type and current keywords.
     Uses rule-based for common social media, LLM for more nuanced queries.
     """
+    gemini_model = _get_gemini_model()
     queries = []
     # Rule-based additions for common social media/platforms
     if person_type == "famous":
@@ -72,7 +95,7 @@ def _generate_dynamic_search_queries(person_name: str, person_type: str, current
     Focus on unique identifiers, achievements, or specific affiliations.
     Provide each query on a new line.
     """
-    llm_generated_queries = _get_llm_response(llm_prompt).split('\n')
+    llm_generated_queries = _get_llm_response(llm_prompt, gemini_model).split('\n')
     queries.extend([q.strip() for q in llm_generated_queries if q.strip()])
     
     # Add general queries
@@ -86,6 +109,7 @@ def _verify_identity_and_extract_facts(extracted_text: str, person_name: str, id
     Uses LLM to verify if the extracted text is about the correct person and extracts new facts.
     identity_fingerprint: A dict of known facts like {'birth_year': '1980', 'occupation': 'actor'}
     """
+    gemini_model = _get_gemini_model()
     known_facts_str = ", ".join([f"{k}: {v}" for k, v in identity_fingerprint.items()]) if identity_fingerprint else "None"
     
     prompt = f"""Analyze the following text and determine if it is primarily about "{person_name}".
@@ -98,13 +122,13 @@ def _verify_identity_and_extract_facts(extracted_text: str, person_name: str, id
 
     Provide your response in JSON format with two keys:
     'is_same_person': true/false
-    'new_facts': {{'fact_key': 'fact_value', ...}} (empty if not the same person or no new facts)
+    'new_facts': {{"fact_key': 'fact_value', ...}} (empty if not the same person or no new facts)
     'reason': 'brief explanation'
     
-    Example for same person: {{\"is_same_person\": true, \"new_facts\": {{\"occupation\": \"scientist\", \"university\": \"MIT\"}}, \"reason\": \"Matches name and context\"}}
-    Example for different person: {{\"is_same_person\": false, \"new_facts\": null, \"reason\": \"Different birth year and profession\"}}
+    Example for same person: {{"is_same_person": true, "new_facts": {{"occupation": "scientist", "university": "MIT"}}, "reason": "Matches name and context"}}
+    Example for different person: {{"is_same_person": false, "new_facts": None, "reason": "Different birth year and profession"}}
     """
-    response_text = _get_llm_response(prompt)
+    response_text = _get_llm_response(prompt, gemini_model)
     try:
         llm_response = json.loads(response_text)
         return llm_response.get("is_same_person", False), llm_response.get("new_facts", {})
@@ -205,7 +229,7 @@ def research_person(initial_context: dict, search_duration_minutes: int = 60) ->
                 Text:
                 {extracted_text[:2000]} # Limit text for extraction
                 """
-                extracted_info_text = _get_llm_response(extraction_prompt)
+                extracted_info_text = _get_llm_response(extraction_prompt, _get_gemini_model())
                 try:
                     extracted_info = json.loads(extracted_info_text)
                     person_profile["details"].update(extracted_info)
@@ -227,7 +251,7 @@ def research_person(initial_context: dict, search_duration_minutes: int = 60) ->
                 Text:
                 {extracted_text[:1000]}
                 """
-                discovery_response = _get_llm_response(discovery_prompt)
+                discovery_response = _get_llm_response(discovery_prompt, _get_gemini_model())
                 for line in discovery_response.split('\n'):
                     line = line.strip()
                     if line.startswith("http") and line not in visited_urls:
@@ -260,7 +284,7 @@ def research_person(initial_context: dict, search_duration_minutes: int = 60) ->
     Provide the final profile in JSON format with keys like:
     "name", "summary", "occupation", "education", "notable_achievements", "affiliations", "social_media_links" (dict), "birth_info", "death_info", "discrepancies", "confidence_score".
     """
-    final_profile_text = _get_llm_response(final_synthesis_prompt)
+    final_profile_text = _get_llm_response(final_synthesis_prompt, _get_gemini_model())
     try:
         final_profile = json.loads(final_profile_text)
         person_profile.update(final_profile)

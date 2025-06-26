@@ -1,8 +1,10 @@
 import keyring
-from google import genai
+import google.generativeai as genai
 from transformers import AutoTokenizer, PegasusForConditionalGeneration
 from LLM import llm
 import logging
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -24,17 +26,16 @@ def summarize_with_gemini(text: str) -> str:
         logging.warning("GEMINI_API_KEY not found in keyring. Falling back to local LLM for summarization.")
         return summarize_with_local_llm(text)
 
-    genai.configure(api_key=api_key)
-
-    model = genai.GenerativeModel('gemma-3-12b-it') # Using gemma-3-12b-it as requested
+    genai.configure(api_key=api_key) # Keep this for consistency, though Langchain handles its own API key
+    model = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=api_key) # Using gemini-pro
 
     prompt = f"Please provide a concise summary of the following text:\n\n{text}"
 
-    response = model.generate_content(prompt)
+    response = model.invoke([HumanMessage(content=prompt)])
 
-    if response and response.text:
+    if response and response.content:
       logging.info("Using Gemini for summarization.")
-      return response.text
+      return response.content
     else:
       logging.warning("Gemini summarization failed or returned empty response. Falling back to local LLM.")
       return summarize_with_local_llm(text)

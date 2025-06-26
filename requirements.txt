@@ -11,3 +11,6 @@ newspaper4k
 trafilatura
 accelerate
 bitsandbytes
+indic-nlp-library
+langchain
+langchain-google-genai

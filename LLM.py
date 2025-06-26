@@ -2,9 +2,12 @@ import json
 import keyring
 from llama_cpp import Llama
 import logging
+import google.generativeai as genai # Import genai for configure
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='myapp.log')
 
 # Local LLM initialization (kept for fallback)
 llm = Llama.from_pretrained(
@@ -19,8 +22,8 @@ def _get_gemini_model():
         if not api_key:
             logging.warning("GEMINI_API_KEY not found in keyring. Falling back to local LLM.")
             return None
-        genai.configure(api_key=api_key)
-        return genai.GenerativeModel('gemma-3-12b-it') # Using gemma-3-12b-it as requested
+        genai.configure(api_key=api_key) # Still need this for other modules that might use genai directly
+        return ChatGoogleGenerativeAI(model="gemma-3-12b-it", google_api_key=api_key) # gemini-pro is paid so always use gemma-3-12b-it
     except Exception as e:
         logging.error(f"Error configuring Gemini API: {e}. Falling back to local LLM.")
         return None
@@ -37,8 +40,8 @@ def enhance_query_into_two(query: str) -> list:
                 f"Provide all variations, each on a new line."
                 f"example:- this is an example query"
             )
-            response = gemini_model.generate_content(prompt)
-            queries = response.text.strip().split("\n")
+            response = gemini_model.invoke([HumanMessage(content=prompt)])
+            queries = response.content.strip().split("\n")
             return [q.strip("- ").strip("* ").strip() for q in queries if q.strip()]
         except Exception as e:
             logging.error(f"Gemini query enhancement failed: {e}. Falling back to local LLM.")
@@ -71,7 +74,7 @@ def classify_query_type(query: str) -> dict:
             Example for person: {{\"query_type\": \"person\", \"person_name\": \"Marie Curie\", \"initial_context\": \"famous scientist, Nobel Prize winner\"}}
             Example for general: {{\"query_type\": \"general\"}}
             """
-            response_text = gemini_model.generate_content(prompt).text.strip()
+            response_text = gemini_model.invoke([HumanMessage(content=prompt)]).content.strip()
             return json.loads(response_text)
         except Exception as e:
             logging.error(f"Gemini query classification failed: {e}. Falling back to local LLM.")
@@ -87,7 +90,7 @@ def classify_query_type(query: str) -> dict:
     
     Example for person: {{\"query_type\": \"person\", \"person_name\": \"Marie Curie\", \"initial_context\": \"famous scientist, Nobel Prize winner\"}}
     Example for general: {{\"query_type\": \"general\"}}
-    """
+            """
     response_text = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}])["choices"][0]["message"]["content"].strip()
     try:
         return json.loads(response_text)
