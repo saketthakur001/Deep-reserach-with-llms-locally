@@ -44,3 +44,7 @@ The current codebase is a great starting point, and significant progress has bee
 *   **Refine `person_researcher.py`**: Further develop the `person_researcher.py` module to provide more in-depth and structured information for person-specific queries.
 
 By addressing these points, you can transform your project into an even more robust and powerful research tool.
+
+## Requirements
+
+To run this project, you need to install the following dependencies:

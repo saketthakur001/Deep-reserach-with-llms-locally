@@ -1,9 +1,11 @@
-from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
 import random
+import asyncio
 import time
 from newspaper import Article
 import newspaper
 import trafilatura
+import keyring
 
 # List of common user agents to rotate
 USER_AGENTS = [
@@ -19,7 +21,13 @@ USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; AS; rv:11.0) like Gecko"
 ]
 
-def extract_article_content_with_newspaper(html_content, url):
+# Placeholder for proxy configuration
+# PROXIES = [
+#     "http://user:pass@proxy.example.com:8080",
+#     "http://user:pass@another.proxy.com:8080",
+# ]
+
+async def extract_article_content_with_newspaper(html_content, url):
     """
     Extract the main article content from HTML using newspaper4k.
     
@@ -47,64 +55,96 @@ def extract_article_content_with_newspaper(html_content, url):
         "publish_date": article.publish_date
     }
 
-def extract_article_content_with_trafilatura(html_content):
+async def extract_article_content_with_trafilatura(html_content):
     """
     Extracts the main article content from HTML using trafilatura.
     """
     return trafilatura.extract(html_content, include_comments=False, include_tables=False, no_fallback=True)
 
-def get_page_content(url, headless=True):
+async def get_page_content(url, headless=True, retries=3, delay_multiplier=2):
     """
     Fetches and returns relevant article content from a webpage using Playwright.
+    Includes retry logic with exponential backoff and random delays.
     
     :param url: The URL of the page to fetch.
     :param headless: Whether to run in headless mode (default is True).
+    :param retries: Number of retries for fetching the page.
+    :param delay_multiplier: Multiplier for exponential backoff delay.
     :return: Dictionary containing article information.
     """
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=headless)
-        # Select a random user agent
-        user_agent = random.choice(USER_AGENTS)
-        page = browser.new_page(user_agent=user_agent)
-        
-        page.set_viewport_size({"width": 1366, "height": 768})
-        
-        page.goto(url, timeout=60000)
-        
-        page.wait_for_load_state("networkidle")
-        
-        html_content = page.content()
-        
-        browser.close()
-        
-        return html_content
+    for attempt in range(retries):
+        try:
+            async with async_playwright() as p:
+                # proxy = random.choice(PROXIES) if PROXIES else None
+                browser = await p.chromium.launch(headless=headless) # , proxy={"server": proxy} if proxy else {})
+                user_agent = random.choice(USER_AGENTS)
+                page = await browser.new_page(user_agent=user_agent)
+                
+                await page.set_viewport_size({"width": 1366, "height": 768})
+                
+                await page.goto(url, timeout=60000)
+                
+                # More robust waiting for content to load
+                await page.wait_for_load_state("networkidle")
+                await asyncio.sleep(random.uniform(1, 3)) # Dynamic delay
+                
+                html_content = await page.content()
+                
+                await browser.close()
+                
+                return html_content
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed for {url}: {e}")
+            if attempt < retries - 1:
+                delay = random.uniform(delay_multiplier ** attempt, delay_multiplier ** (attempt + 1))
+                print(f"Retrying {url} in {delay:.2f} seconds...")
+                await asyncio.sleep(delay)
+            else:
+                print(f"Failed to fetch {url} after {retries} attempts.")
+                return None
 
-def get_all_text_from_page(url, headless=True):
+async def get_all_text_from_page(url, headless=True, retries=3, delay_multiplier=2):
     """
     Fetches and returns all visible text content from a webpage using Playwright.
+    Includes retry logic with exponential backoff and random delays.
     
     :param url: The URL of the page to fetch.
     :param headless: Whether to run in headless mode (default is True).
+    :param retries: Number of retries for fetching the page.
+    :param delay_multiplier: Multiplier for exponential backoff delay.
     :return: A string containing all visible text from the page.
     """
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=headless)
-        user_agent = random.choice(USER_AGENTS)
-        page = browser.new_page(user_agent=user_agent)
-        
-        page.set_viewport_size({"width": 1366, "height": 768})
-        
-        page.goto(url, timeout=60000)
-        
-        page.wait_for_load_state("networkidle")
-        
-        all_text = page.locator('body').all_text_contents()
-        
-        browser.close()
-        
-        return "\n".join(all_text).strip()
+    for attempt in range(retries):
+        try:
+            async with async_playwright() as p:
+                # proxy = random.choice(PROXIES) if PROXIES else None
+                browser = await p.chromium.launch(headless=headless) # , proxy={"server": proxy} if proxy else {})
+                user_agent = random.choice(USER_AGENTS)
+                page = await browser.new_page(user_agent=user_agent)
+                
+                await page.set_viewport_size({"width": 1366, "height": 768})
+                
+                await page.goto(url, timeout=60000)
+                
+                await page.wait_for_load_state("networkidle")
+                await asyncio.sleep(random.uniform(1, 3)) # Dynamic delay
+                
+                all_text = await page.locator('body').all_text_contents()
+                
+                await browser.close()
+                
+                return "\n".join(all_text).strip()
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed for {url}: {e}")
+            if attempt < retries - 1:
+                delay = random.uniform(delay_multiplier ** attempt, delay_multiplier ** (attempt + 1))
+                print(f"Retrying {url} in {delay:.2f} seconds...")
+                await asyncio.sleep(delay)
+            else:
+                print(f"Failed to fetch {url} after {retries} attempts.")
+                return None
 
-def get_articles_from_source(source_url, max_articles=5, headless=True):
+async def get_articles_from_source(source_url, max_articles=5, headless=True):
     source = newspaper.build(source_url, memoize_articles=False)
     
     article_urls = [article.url for article in source.articles[:max_articles]]
@@ -112,10 +152,11 @@ def get_articles_from_source(source_url, max_articles=5, headless=True):
     articles = []
     for url in article_urls:
         try:
-            html_content = get_page_content(url, headless)
-            article_content = extract_article_content_with_newspaper(html_content, url)
-            articles.append(article_content)
-            time.sleep(random.uniform(1, 3))
+            html_content = await get_page_content(url, headless)
+            if html_content:
+                article_content = await extract_article_content_with_newspaper(html_content, url)
+                articles.append(article_content)
+            await asyncio.sleep(random.uniform(1, 3)) # Be polite
         except Exception as e:
             print(f"Error processing {url}: {e}")
     

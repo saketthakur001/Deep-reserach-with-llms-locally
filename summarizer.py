@@ -1,5 +1,4 @@
 import keyring
-import google.generativeai as genai
 from transformers import AutoTokenizer, PegasusForConditionalGeneration
 from LLM import llm
 import logging
@@ -9,40 +8,39 @@ from langchain_core.messages import HumanMessage
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 def summarize_with_gemini(text: str) -> str:
-  """
-  Generates a summary for the given text using the Gemini API.
+    """
+    Generate a summary for the given text using the Gemini API.
+    Falls back to local LLM if Gemini is unavailable or fails.
 
-  Args:
-    text: The input text to be summarized.
+    Args:
+        text: The input text to be summarized.
 
-  Returns:
-    A string containing the summary of the text.
-    Returns an error message if summarization fails.
-  """
-  try:
-    api_key = keyring.get_password("gemini_key", "user1")
-    if not api_key:
-        logging.warning("GEMINI_API_KEY not found in keyring. Falling back to local LLM for summarization.")
+    Returns:
+        A summary string, or error message if both methods fail.
+    """
+    try:
+        api_key = keyring.get_password("gemini_key", "user1")
+        if not api_key:
+            logging.warning("GEMINI_API_KEY not found in keyring. Falling back to local LLM.")
+            return summarize_with_local_llm(text)
+
+        model = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=api_key)
+
+        prompt = f"Please provide a concise summary of the following text:\n\n{text}"
+        response = model.invoke([HumanMessage(content=prompt)])
+
+        if response and response.content:
+            logging.info("Using Gemini for summarization.")
+            return response.content
+        else:
+            logging.warning("Gemini returned empty or invalid response. Falling back to local LLM.")
+            return summarize_with_local_llm(text)
+
+    except Exception:
+        logging.exception("An error occurred during Gemini summarization. Falling back to local LLM.")
         return summarize_with_local_llm(text)
-
-    genai.configure(api_key=api_key) # Keep this for consistency, though Langchain handles its own API key
-    model = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=api_key) # Using gemini-pro
-
-    prompt = f"Please provide a concise summary of the following text:\n\n{text}"
-
-    response = model.invoke([HumanMessage(content=prompt)])
-
-    if response and response.content:
-      logging.info("Using Gemini for summarization.")
-      return response.content
-    else:
-      logging.warning("Gemini summarization failed or returned empty response. Falling back to local LLM.")
-      return summarize_with_local_llm(text)
-
-  except Exception as e:
-    logging.error(f"An error occurred during Gemini summarization: {e}. Falling back to local LLM.")
-    return summarize_with_local_llm(text)
 
 def summarize_with_pegasus(text: str) -> str:
     """
