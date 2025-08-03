@@ -79,6 +79,31 @@ def get_page_content(url, headless=True):
         
         return html_content
 
+def get_all_text_from_page(url, headless=True):
+    """
+    Fetches and returns all visible text content from a webpage using Playwright.
+    
+    :param url: The URL of the page to fetch.
+    :param headless: Whether to run in headless mode (default is True).
+    :return: A string containing all visible text from the page.
+    """
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=headless)
+        user_agent = random.choice(USER_AGENTS)
+        page = browser.new_page(user_agent=user_agent)
+        
+        page.set_viewport_size({"width": 1366, "height": 768})
+        
+        page.goto(url, timeout=60000)
+        
+        page.wait_for_load_state("networkidle")
+        
+        all_text = page.locator('body').all_text_contents()
+        
+        browser.close()
+        
+        return "\n".join(all_text).strip()
+
 def get_articles_from_source(source_url, max_articles=5, headless=True):
     source = newspaper.build(source_url, memoize_articles=False)
     

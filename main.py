@@ -6,11 +6,12 @@ import utils
 import person_researcher
 import json
 import logging
+import asyncio
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def research_query(query: str):
+async def research_query(query: str):
     # Step 1: Classify query type
     try:
         query_classification = LLM.classify_query_type(query)
@@ -24,7 +25,7 @@ def research_query(query: str):
         initial_context = query_classification.get("initial_context", "")
         logging.info(f"Detected person search for: {person_name} (Context: {initial_context})")
         try:
-            person_profile = person_researcher.research_person({"name": person_name, "known_for": initial_context}, search_duration_minutes=5) # Set a reasonable default duration
+            person_profile = await person_researcher.research_person({"name": person_name, "known_for": initial_context}, search_duration_minutes=5) # Set a reasonable default duration
             logging.info("\n--- Final Person Profile ---")
             logging.info(json.dumps(person_profile, indent=2))
             return person_profile
@@ -61,12 +62,13 @@ def research_query(query: str):
         all_article_content = []
         for result in all_search_results:
             try:
-                html_content = web_crawler.get_page_content(result["link"])
-                article_data = web_crawler.extract_article_content_with_newspaper(html_content, result["link"])
-                if article_data and article_data["text"]:
-                    all_article_content.append(article_data["text"])
-                else:
-                    logging.warning(f"No article content extracted from {result['link']}")
+                html_content = await web_crawler.get_page_content(result["link"])
+                if html_content:
+                    article_data = await web_crawler.extract_article_content_with_newspaper(html_content, result["link"])
+                    if article_data and article_data["text"]:
+                        all_article_content.append(article_data["text"])
+                    else:
+                        logging.warning(f"No article content extracted from {result['link']}")
             except Exception as e:
                 logging.error(f"Error crawling {result['link']}: {e}")
         logging.info(f"Total Articles Crawled: {len(all_article_content)}")
@@ -90,5 +92,4 @@ def research_query(query: str):
 
 if __name__ == "__main__":
     user_query = input("Enter your research query: ")
-    research_query(user_query)
-
+    asyncio.run(research_query(user_query))

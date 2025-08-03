@@ -6,6 +6,7 @@ import google.generativeai as genai
 from llama_cpp import Llama
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
+import asyncio
 
 import web_crawler
 import google_search_api
@@ -51,7 +52,7 @@ def _classify_person_type(initial_context: dict) -> dict:
     Initial context: {initial_context}
 
     Provide the output in a JSON format with 'person_type' and 'initial_keywords' (a list of strings).
-    Example: {{"person_type": "famous", "initial_keywords": ["actor", "movies", "Hollywood"]}}
+    Example: {{\"person_type\": \"famous\", \"initial_keywords\": [\"actor\", \"movies\", \"Hollywood\"]}}
     """
     response_text = _get_llm_response(prompt, gemini_model)
     try:
@@ -122,11 +123,11 @@ def _verify_identity_and_extract_facts(extracted_text: str, person_name: str, id
 
     Provide your response in JSON format with two keys:
     'is_same_person': true/false
-    'new_facts': {{"fact_key': 'fact_value', ...}} (empty if not the same person or no new facts)
+    'new_facts': {{\"fact_key\": 'fact_value', ...}} (empty if not the same person or no new facts)
     'reason': 'brief explanation'
     
-    Example for same person: {{"is_same_person": true, "new_facts": {{"occupation": "scientist", "university": "MIT"}}, "reason": "Matches name and context"}}
-    Example for different person: {{"is_same_person": false, "new_facts": None, "reason": "Different birth year and profession"}}
+    Example for same person: {{\"is_same_person\": true, \"new_facts\": {{\"occupation\": \"scientist\", \"university\": \"MIT\"}}, \"reason\": \"Matches name and context\"}}
+    Example for different person: {{\"is_same_person\": false, \"new_facts\": None, \"reason\": \"Different birth year and profession\"}}
     """
     response_text = _get_llm_response(prompt, gemini_model)
     try:
@@ -136,7 +137,7 @@ def _verify_identity_and_extract_facts(extracted_text: str, person_name: str, id
         print(f"Warning: Could not parse LLM response for identity verification: {response_text}")
         return False, {} # Default to not same person if parsing fails
 
-def research_person(initial_context: dict, search_duration_minutes: int = 60) -> dict:
+async def research_person(initial_context: dict, search_duration_minutes: int = 60) -> dict:
     """
     Conducts a detailed research on a person, verifying identity and accumulating information.
     
@@ -192,7 +193,7 @@ def research_person(initial_context: dict, search_duration_minutes: int = 60) ->
                 if result["link"] not in visited_urls:
                     urls_to_visit.append(result["link"])
                     visited_urls.add(result["link"])
-        time.sleep(random.uniform(1, 3)) # Be polite
+        await asyncio.sleep(random.uniform(1, 3)) # Be polite
 
     print(f"Found {len(urls_to_visit)} unique URLs from initial searches.")
 
@@ -202,74 +203,75 @@ def research_person(initial_context: dict, search_duration_minutes: int = 60) ->
         print(f"Processing URL: {url}")
 
         try:
-            html_content = web_crawler.get_page_content(url)
-            extracted_data = web_crawler.extract_article_content_with_newspaper(html_content, url)
-            extracted_text = extracted_data.get("text", "")
+            html_content = await web_crawler.get_page_content(url)
+            if html_content:
+                extracted_data = await web_crawler.extract_article_content_with_newspaper(html_content, url)
+                extracted_text = extracted_data.get("text", "")
 
-            if not extracted_text:
-                print(f"No main text extracted from {url}. Trying trafilatura...")
-                extracted_text = web_crawler.extract_article_content_with_trafilatura(html_content)
-            
-            if not extracted_text:
-                print(f"Still no text from {url}. Skipping.")
-                continue
-
-            # Identity Verification
-            is_same_person, new_facts = _verify_identity_and_extract_facts(extracted_text, person_name, identity_fingerprint)
-
-            if is_same_person:
-                print(f"Confirmed identity for {url}. Extracting info...")
-                # Update identity fingerprint
-                identity_fingerprint.update(new_facts)
+                if not extracted_text:
+                    print(f"No main text extracted from {url}. Trying trafilatura...")
+                    extracted_text = await web_crawler.extract_article_content_with_trafilatura(html_content)
                 
-                # Extract detailed information using LLM
-                extraction_prompt = f"""From the following text about "{person_name}", extract key details.
-                Focus on: occupation, education, notable achievements, affiliations, social media handles (Instagram, Facebook, Twitter/X, LinkedIn), birth date/year, death date/year.
-                Provide the output in JSON format. If a field is not found, omit it.
-                Text:
-                {extracted_text[:2000]} # Limit text for extraction
-                """
-                extracted_info_text = _get_llm_response(extraction_prompt, _get_gemini_model())
-                try:
-                    extracted_info = json.loads(extracted_info_text)
-                    person_profile["details"].update(extracted_info)
+                if not extracted_text:
+                    print(f"Still no text from {url}. Skipping.")
+                    continue
+
+                # Identity Verification
+                is_same_person, new_facts = _verify_identity_and_extract_facts(extracted_text, person_name, identity_fingerprint)
+
+                if is_same_person:
+                    print(f"Confirmed identity for {url}. Extracting info...")
+                    # Update identity fingerprint
+                    identity_fingerprint.update(new_facts)
                     
-                    # Special handling for social media links
-                    for sm_platform in ["instagram", "facebook", "twitter", "linkedin"]:
-                        if sm_platform in extracted_info:
-                            person_profile["social_media"][sm_platform] = extracted_info[sm_platform]
-                            del person_profile["details"][sm_platform] # Remove from general details
-                            
-                except json.JSONDecodeError:
-                    print(f"Warning: Could not parse LLM response for info extraction: {extracted_info_text}")
-                    # Add raw text to discrepancies if extraction fails
-                    person_profile["discrepancies"].append(f"Failed to parse structured info from {url}: {extracted_info_text[:200]}")
+                    # Extract detailed information using LLM
+                    extraction_prompt = f"""From the following text about "{person_name}", extract key details.
+                    Focus on: occupation, education, notable achievements, affiliations, social media handles (Instagram, Facebook, Twitter/X, LinkedIn), birth date/year, death date/year.
+                    Provide the output in JSON format. If a field is not found, omit it.
+                    Text:
+                    {extracted_text[:2000]} # Limit text for extraction
+                    """
+                    extracted_info_text = _get_llm_response(extraction_prompt, _get_gemini_model())
+                    try:
+                        extracted_info = json.loads(extracted_info_text)
+                        person_profile["details"].update(extracted_info)
+                        
+                        # Special handling for social media links
+                        for sm_platform in ["instagram", "facebook", "twitter", "linkedin"]:
+                            if sm_platform in extracted_info:
+                                person_profile["social_media"][sm_platform] = extracted_info[sm_platform]
+                                del person_profile["details"][sm_platform] # Remove from general details
+                                
+                    except json.JSONDecodeError:
+                        print(f"Warning: Could not parse LLM response for info extraction: {extracted_info_text}")
+                        # Add raw text to discrepancies if extraction fails
+                        person_profile["discrepancies"].append(f"Failed to parse structured info from {url}: {extracted_info_text[:200]}")
 
-                # Discover new links/keywords from the text
-                discovery_prompt = f"""From the following text about "{person_name}", identify any new, relevant URLs or keywords that could lead to more information about THIS SAME PERSON.
-                Provide URLs on new lines, followed by keywords on new lines.
-                Text:
-                {extracted_text[:1000]}
-                """
-                discovery_response = _get_llm_response(discovery_prompt, _get_gemini_model())
-                for line in discovery_response.split('\n'):
-                    line = line.strip()
-                    if line.startswith("http") and line not in visited_urls:
-                        urls_to_visit.append(line)
-                        visited_urls.add(line)
-                    elif line and not line.startswith("http"):
-                        current_keywords.append(line) # Add to keywords for future searches
+                    # Discover new links/keywords from the text
+                    discovery_prompt = f"""From the following text about "{person_name}", identify any new, relevant URLs or keywords that could lead to more information about THIS SAME PERSON.
+                    Provide URLs on new lines, followed by keywords on new lines.
+                    Text:
+                    {extracted_text[:1000]}
+                    """
+                    discovery_response = _get_llm_response(discovery_prompt, _get_gemini_model())
+                    for line in discovery_response.split('\n'):
+                        line = line.strip()
+                        if line.startswith("http") and line not in visited_urls:
+                            urls_to_visit.append(line)
+                            visited_urls.add(line)
+                        elif line and not line.startswith("http"):
+                            current_keywords.append(line) # Add to keywords for future searches
 
-            else:
-                reason = new_facts.get("reason", "Identity not confirmed.")
-                person_profile["discrepancies"].append(f"Skipped URL {url}: {reason}")
-                print(f"Identity not confirmed for {url}. Reason: {reason}")
+                else:
+                    reason = new_facts.get("reason", "Identity not confirmed.")
+                    person_profile["discrepancies"].append(f"Skipped URL {url}: {reason}")
+                    print(f"Identity not confirmed for {url}. Reason: {reason}")
 
         except Exception as e:
             print(f"Error processing {url}: {e}")
             person_profile["discrepancies"].append(f"Error crawling {url}: {e}")
         
-        time.sleep(random.uniform(1, 3)) # Be polite
+        await asyncio.sleep(random.uniform(1, 3)) # Be polite
 
     # Step 4: Data Consolidation and Synthesis
     final_synthesis_prompt = f"""Consolidate and synthesize the following raw extracted data about "{person_name}" into a comprehensive, well-structured profile.
@@ -305,7 +307,8 @@ if __name__ == "__main__":
     }
     
     print(f"Starting research for {initial_person_context['name']}...")
-    profile = research_person(initial_person_context, search_duration_minutes=1) # Set a short duration for testing
+    asyncio.run(research_person(initial_person_context, search_duration_minutes=1)) # Set a short duration for testing
     
     print("\n--- Final Person Profile ---")
-    print(json.dumps(profile, indent=2))
+    # The result of asyncio.run is not directly captured here for printing in this example
+    # You would typically handle the return value of research_person if you need to print it
