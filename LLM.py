@@ -2,7 +2,9 @@ import json
 import keyring
 from llama_cpp import Llama
 import logging
-import google.generativeai as genai # Import genai for configure
+# import google.generativeai as genai # Import genai for configure
+from google import genai
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 
@@ -20,12 +22,14 @@ def _get_gemini_model():
     try:
         api_key = keyring.get_password("gemini_key", "user1")
         if not api_key:
-            logging.warning("GEMINI_API_KEY not found in keyring. Falling back to local LLM.")
+            logging.warning("GEMINI_API_KEY not found. Falling back to local LLM.")
             return None
-        genai.configure(api_key=api_key) # Still need this for other modules that might use genai directly
-        return ChatGoogleGenerativeAI(model="gemma-3-12b-it", google_api_key=api_key) # gemini-pro is paid so always use gemma-3-12b-it
+        # Configure the unified client
+        client = genai.Client(api_key=api_key)
+        # LangChain integration will pick up this client internally
+        return ChatGoogleGenerativeAI(model="gemma-3-12b-it", client=client)
     except Exception as e:
-        logging.error(f"Error configuring Gemini API: {e}. Falling back to local LLM.")
+        logging.error(f"Error configuring GenAI SDK: {e}. Falling back to local LLM.")
         return None
 
 def enhance_query_into_two(query: str) -> list:

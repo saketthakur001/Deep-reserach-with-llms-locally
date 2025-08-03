@@ -4,7 +4,7 @@ FROM  python:3.13-slim
 # Set working directory inside the container.
 WORKDIR /app
 
-current dir content into the app
+#current dir content into the app
 COPY . /app
 
 # Install system dependencies 

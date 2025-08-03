@@ -148,3 +148,4 @@ Call log:
 2025-06-27 00:01:56,121 - ERROR - Error crawling https://rocketreach.co/saket-thakur-email_64783875: Timeout 30000ms exceeded.
 2025-06-27 00:01:59,004 - INFO - Total Articles Crawled: 57
 2025-06-27 00:01:59,017 - ERROR - An error occurred during Gemini summarization: module 'google.genai' has no attribute 'configure'. Falling back to local LLM.
+2025-08-03 17:16:24,584 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
