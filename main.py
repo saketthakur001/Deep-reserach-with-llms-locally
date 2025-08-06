@@ -13,27 +13,28 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 async def research_query(query: str):
     # Step 1: Classify query type
-    try:
-        query_classification = LLM.classify_query_type(query)
-        query_type = query_classification.get("query_type")
-    except Exception as e:
-        logging.error(f"Error classifying query type: {e}")
-        return "Error: Could not classify query type."
+    # try:
+    #     query_classification = LLM.classify_query_type(query)
+    #     query_type = query_classification.get("query_type")
+    #     print(query_type)
+    # except Exception as e:
+    #     logging.error(f"Error classifying query type: {e}")
+    #     return "Error: Could not classify query type."
 
-    if query_type == "person":
-        person_name = query_classification.get("person_name")
-        initial_context = query_classification.get("initial_context", "")
-        logging.info(f"Detected person search for: {person_name} (Context: {initial_context})")
-        try:
-            person_profile = await person_researcher.research_person({"name": person_name, "known_for": initial_context}, search_duration_minutes=5) # Set a reasonable default duration
-            logging.info("\n--- Final Person Profile ---")
-            logging.info(json.dumps(person_profile, indent=2))
-            return person_profile
-        except Exception as e:
-            logging.error(f"Error researching person {person_name}: {e}")
-            return "Error: Could not complete person research."
-    else:
-        logging.info("Detected general research query.")
+    # if query_type == "person":
+    #     person_name = query_classification.get("person_name")
+    #     initial_context = query_classification.get("initial_context", "")
+    #     logging.info(f"Detected person search for: {person_name} (Context: {initial_context})")
+    #     try:
+    #         person_profile = await person_researcher.research_person({"name": person_name, "known_for": initial_context}, search_duration_minutes=5) # Set a reasonable default duration
+    #         logging.info("\n--- Final Person Profile ---")
+    #         logging.info(json.dumps(person_profile, indent=2))
+    #         return person_profile
+    #     except Exception as e:
+    #         logging.error(f"Error researching person {person_name}: {e}")
+    #         return "Error: Could not complete person research."
+    # else:
+    #     logging.info("Detected general research query.")
         # 1. Enhance query
         try:
             enhanced_queries = LLM.enhance_query_into_two(query)
@@ -90,6 +91,6 @@ async def research_query(query: str):
             logging.error(f"Error summarizing content: {e}")
             return "Error: Could not summarize extracted content."
 
-if __name__ == "__main__":
-    user_query = input("Enter your research query: ")
-    asyncio.run(research_query(user_query))
+# if __name__ == "__main__":
+    # user_query = input("Enter your research query: ")
+    # asyncio.run(research_query(user_query))

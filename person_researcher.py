@@ -1,8 +1,9 @@
 import time
 import random
 import json
-import keyring
-import google.generativeai as genai
+# import keyring
+# import google.generativeai as genai
+from google import genai
 from llama_cpp import Llama
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
@@ -10,6 +11,11 @@ import asyncio
 
 import web_crawler
 import google_search_api
+
+
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Initialize LLM (assuming it's a local model)
 # This should ideally be passed or managed globally if multiple modules use it
@@ -21,7 +27,7 @@ llm = Llama.from_pretrained(
 
 def _get_gemini_model():
     try:
-        api_key = keyring.get_password("gemini_key", "user1")
+        api_key = os.getenv("GEMINI_KEY")
         if not api_key:
             return None
         genai.configure(api_key=api_key)

@@ -149,3 +149,213 @@ Call log:
 2025-06-27 00:01:59,004 - INFO - Total Articles Crawled: 57
 2025-06-27 00:01:59,017 - ERROR - An error occurred during Gemini summarization: module 'google.genai' has no attribute 'configure'. Falling back to local LLM.
 2025-08-03 17:16:24,584 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-03 17:26:21,272 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-03 17:26:57,742 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-03 17:28:22,401 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-03 17:28:48,086 - WARNING - GEMINI_API_KEY not found. Falling back to local LLM.
+2025-08-03 17:28:48,086 - INFO - Using local LLM for query classification.
+2025-08-03 17:28:51,842 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "Iceland",
+  "initial_context": "Iceland is a Nordic island nation known for its volcanic landscapes, geothermal energy, and a unique cultural heritage."
+}
+```
+2025-08-03 17:28:51,842 - INFO - Detected general research query.
+2025-08-03 17:28:51,846 - WARNING - GEMINI_API_KEY not found. Falling back to local LLM.
+2025-08-03 17:28:51,846 - INFO - Using local LLM for query enhancement.
+2025-08-03 17:28:56,329 - INFO - Enhanced Queries: ['Iceland president current', 'Iceland president name', 'Iceland president leadership', 'Iceland president – current status', 'Iceland president – recent appointment', 'Iceland president – leadership position', 'Iceland president – details', 'Iceland president – biography', 'Iceland president – role', 'Iceland president – political affiliation (if applicable)', 'Iceland president – election date (if applicable)', 'Iceland president – official title', 'Iceland president – official position']
+2025-08-03 17:29:01,598 - WARNING - No search results or error for query 'Iceland president current': no results found or invalid api key.
+2025-08-03 17:29:01,691 - WARNING - No search results or error for query 'Iceland president name': no results found or invalid api key.
+2025-08-03 17:29:01,782 - WARNING - No search results or error for query 'Iceland president leadership': no results found or invalid api key.
+2025-08-03 17:29:01,870 - WARNING - No search results or error for query 'Iceland president – current status': no results found or invalid api key.
+2025-08-03 17:29:01,965 - WARNING - No search results or error for query 'Iceland president – recent appointment': no results found or invalid api key.
+2025-08-03 17:29:02,071 - WARNING - No search results or error for query 'Iceland president – leadership position': no results found or invalid api key.
+2025-08-03 17:29:02,167 - WARNING - No search results or error for query 'Iceland president – details': no results found or invalid api key.
+2025-08-03 17:29:02,254 - WARNING - No search results or error for query 'Iceland president – biography': no results found or invalid api key.
+2025-08-03 17:29:02,350 - WARNING - No search results or error for query 'Iceland president – role': no results found or invalid api key.
+2025-08-03 17:29:02,436 - WARNING - No search results or error for query 'Iceland president – political affiliation (if applicable)': no results found or invalid api key.
+2025-08-03 17:29:02,549 - WARNING - No search results or error for query 'Iceland president – election date (if applicable)': no results found or invalid api key.
+2025-08-03 17:29:02,642 - WARNING - No search results or error for query 'Iceland president – official title': no results found or invalid api key.
+2025-08-03 17:29:02,739 - WARNING - No search results or error for query 'Iceland president – official position': no results found or invalid api key.
+2025-08-03 17:29:02,739 - INFO - Total Search Results: 0
+2025-08-04 02:44:08,040 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-04 02:44:17,896 - WARNING - GEMINI_API_KEY not found. Falling back to local LLM.
+2025-08-04 02:44:17,897 - INFO - Using local LLM for query classification.
+2025-08-04 02:44:25,916 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": null,
+  "initial_context": null
+}
+```
+2025-08-04 02:44:25,916 - INFO - Detected general research query.
+2025-08-04 02:44:25,927 - WARNING - GEMINI_API_KEY not found. Falling back to local LLM.
+2025-08-04 02:44:25,927 - INFO - Using local LLM for query enhancement.
+2025-08-04 02:44:33,388 - INFO - Enhanced Queries: ['What is this?', 'Hello?', 'Can you hear me?', 'Just saying hello.', 'Hey there!', 'Hello, how are you?', 'Hey!', 'Hello, is anyone there?', 'Just checking in.', 'Hey!', 'Hello!']
+2025-08-04 02:44:33,507 - WARNING - No search results or error for query 'What is this?': no results found or invalid api key.
+2025-08-04 02:44:33,596 - WARNING - No search results or error for query 'Hello?': no results found or invalid api key.
+2025-08-04 02:44:33,688 - WARNING - No search results or error for query 'Can you hear me?': no results found or invalid api key.
+2025-08-04 02:44:33,782 - WARNING - No search results or error for query 'Just saying hello.': no results found or invalid api key.
+2025-08-04 02:44:33,892 - WARNING - No search results or error for query 'Hey there!': no results found or invalid api key.
+2025-08-04 02:44:33,987 - WARNING - No search results or error for query 'Hello, how are you?': no results found or invalid api key.
+2025-08-04 02:44:34,082 - WARNING - No search results or error for query 'Hey!': no results found or invalid api key.
+2025-08-04 02:44:34,168 - WARNING - No search results or error for query 'Hello, is anyone there?': no results found or invalid api key.
+2025-08-04 02:44:34,262 - WARNING - No search results or error for query 'Just checking in.': no results found or invalid api key.
+2025-08-04 02:44:34,354 - WARNING - No search results or error for query 'Hey!': no results found or invalid api key.
+2025-08-04 02:44:34,449 - WARNING - No search results or error for query 'Hello!': no results found or invalid api key.
+2025-08-04 02:44:34,449 - INFO - Total Search Results: 0
+2025-08-04 02:49:29,166 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-04 02:49:48,518 - WARNING - GEMINI_API_KEY not found. Falling back to local LLM.
+2025-08-04 02:49:48,519 - INFO - Using local LLM for query classification.
+2025-08-04 02:49:57,511 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "no way",
+  "initial_context": "no specific context provided in the query."
+}
+```
+2025-08-04 02:49:57,511 - INFO - Detected general research query.
+2025-08-04 02:49:57,525 - WARNING - GEMINI_API_KEY not found. Falling back to local LLM.
+2025-08-04 02:49:57,525 - INFO - Using local LLM for query enhancement.
+2025-08-04 02:50:12,273 - INFO - Enhanced Queries: ['How can I avoid this?', "What's the alternative?", 'Is there a different approach?', 'Can I say no to this?', "I don't want to do this.", 'I refuse this.', "I'm not interested.", 'This is unacceptable.', "I don't agree with this.", "I don't want to consider this.", 'I need a different solution.', "I'm not going to participate.", "Let's not do this.", "I'm not going to accept this.", "I'm rejecting this."]
+2025-08-04 02:50:12,410 - WARNING - No search results or error for query 'How can I avoid this?': no results found or invalid api key.
+2025-08-04 02:50:12,504 - WARNING - No search results or error for query 'What's the alternative?': no results found or invalid api key.
+2025-08-04 02:50:12,596 - WARNING - No search results or error for query 'Is there a different approach?': no results found or invalid api key.
+2025-08-04 02:50:12,691 - WARNING - No search results or error for query 'Can I say no to this?': no results found or invalid api key.
+2025-08-04 02:50:12,784 - WARNING - No search results or error for query 'I don't want to do this.': no results found or invalid api key.
+2025-08-04 02:50:12,881 - WARNING - No search results or error for query 'I refuse this.': no results found or invalid api key.
+2025-08-04 02:50:12,975 - WARNING - No search results or error for query 'I'm not interested.': no results found or invalid api key.
+2025-08-04 02:50:13,066 - WARNING - No search results or error for query 'This is unacceptable.': no results found or invalid api key.
+2025-08-04 02:50:13,160 - WARNING - No search results or error for query 'I don't agree with this.': no results found or invalid api key.
+2025-08-04 02:50:13,253 - WARNING - No search results or error for query 'I don't want to consider this.': no results found or invalid api key.
+2025-08-04 02:50:13,345 - WARNING - No search results or error for query 'I need a different solution.': no results found or invalid api key.
+2025-08-04 02:50:13,440 - WARNING - No search results or error for query 'I'm not going to participate.': no results found or invalid api key.
+2025-08-04 02:50:13,534 - WARNING - No search results or error for query 'Let's not do this.': no results found or invalid api key.
+2025-08-04 02:50:13,625 - WARNING - No search results or error for query 'I'm not going to accept this.': no results found or invalid api key.
+2025-08-04 02:50:13,729 - WARNING - No search results or error for query 'I'm rejecting this.': no results found or invalid api key.
+2025-08-04 02:50:13,729 - INFO - Total Search Results: 0
+2025-08-04 03:49:13,703 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-05 01:37:15,721 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-05 01:37:22,510 - WARNING - GEMINI_API_KEY not found. Falling back to local LLM.
+2025-08-05 01:37:22,510 - INFO - Using local LLM for query classification.
+2025-08-05 01:37:34,121 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "unknown",
+  "initial_context": "unknown"
+}
+```
+2025-08-05 01:37:34,122 - INFO - Detected general research query.
+2025-08-05 01:37:34,135 - WARNING - GEMINI_API_KEY not found. Falling back to local LLM.
+2025-08-05 01:37:34,135 - INFO - Using local LLM for query enhancement.
+2025-08-05 01:37:44,992 - INFO - Enhanced Queries: ['This is a simple greeting.', "What's up?", 'Hello!', 'Hey there!', 'Hi!', 'Can you hear me?', 'Just checking in.', 'Hey, how are you?', "Hello, how's it going?", "Hey, what's happening?", 'Hey, you alright?', 'Hello, are you there?', 'Hey!']
+2025-08-05 01:37:44,995 - ERROR - Error performing Google search for 'This is a simple greeting.': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,995 - ERROR - Error performing Google search for 'What's up?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,995 - ERROR - Error performing Google search for 'Hello!': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,995 - ERROR - Error performing Google search for 'Hey there!': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,995 - ERROR - Error performing Google search for 'Hi!': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - ERROR - Error performing Google search for 'Can you hear me?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - ERROR - Error performing Google search for 'Just checking in.': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - ERROR - Error performing Google search for 'Hey, how are you?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - ERROR - Error performing Google search for 'Hello, how's it going?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - ERROR - Error performing Google search for 'Hey, what's happening?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - ERROR - Error performing Google search for 'Hey, you alright?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - ERROR - Error performing Google search for 'Hello, are you there?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - ERROR - Error performing Google search for 'Hey!': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 01:37:44,996 - INFO - Total Search Results: 0
+2025-08-05 08:58:40,289 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-05 09:27:11,648 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-05 09:28:14,409 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:28:14,415 - INFO - Using local LLM for query classification.
+2025-08-05 09:28:17,698 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "unknown",
+  "initial_context": "unknown"
+}
+```
+2025-08-05 09:29:19,647 - INFO - Detected general research query.
+2025-08-05 09:29:33,651 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:29:33,651 - INFO - Using local LLM for query enhancement.
+2025-08-05 09:29:39,162 - INFO - Enhanced Queries: ['This is a simple greeting.', "What's up?", 'Hello!', 'Hey there!', 'Hi!', 'Can you hear me?', 'Just checking in.', 'Hey, how are you?', "Hello, how's it going?", "Hey, what's happening?", 'Hey, you alright?', 'Hello, are you there?', 'Hey!']
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'This is a simple greeting.': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'What's up?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hello!': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hey there!': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hi!': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Can you hear me?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Just checking in.': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hey, how are you?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hello, how's it going?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hey, what's happening?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hey, you alright?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hello, are you there?': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - ERROR - Error performing Google search for 'Hey!': module 'google_search_api' has no attribute 'api_key'
+2025-08-05 09:29:39,167 - INFO - Total Search Results: 0
+2025-08-05 09:30:18,936 - INFO - Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+2025-08-05 09:30:38,153 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:30:38,159 - INFO - Using local LLM for query classification.
+2025-08-05 09:30:41,226 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "unknown",
+  "initial_context": "unknown"
+}
+```
+2025-08-05 09:30:41,226 - INFO - Detected general research query.
+2025-08-05 09:39:31,754 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:39:31,760 - INFO - Using local LLM for query enhancement.
+2025-08-05 09:39:49,117 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:39:49,117 - INFO - Using local LLM for query classification.
+2025-08-05 09:39:52,555 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "Elon Musk",
+  "initial_context": "CEO of Tesla"
+}
+```
+2025-08-05 09:40:04,583 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:40:04,583 - INFO - Using local LLM for query classification.
+2025-08-05 09:40:07,283 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "France",
+  "initial_context": "France is a country in Western Europe."
+}
+```
+2025-08-05 09:41:39,358 - INFO - Using local LLM for query enhancement.
+2025-08-05 09:41:45,084 - INFO - Using local LLM for query classification.
+2025-08-05 09:41:48,592 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "Elon Musk",
+  "initial_context": "CEO of Tesla"
+}
+```
+2025-08-05 09:41:48,593 - INFO - Using local LLM for query classification.
+2025-08-05 09:41:51,854 - WARNING - Could not parse local LLM response for query classification: ```json
+{
+  "query_type": "person",
+  "person_name": "France",
+  "initial_context": "France is a country in Western Europe."
+}
+```
+2025-08-05 09:44:42,226 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:44:42,226 - WARNING - No LLM available for query enhancement.
+2025-08-05 09:44:54,027 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:44:54,027 - WARNING - No LLM available for query classification.
+2025-08-05 09:45:05,914 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:45:05,914 - WARNING - No LLM available for query classification.
+2025-08-05 09:48:42,456 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:48:42,456 - WARNING - No LLM available for query enhancement.
+2025-08-05 09:48:54,319 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:48:54,319 - WARNING - No LLM available for query classification.
+2025-08-05 09:50:20,336 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:50:20,336 - WARNING - No LLM available for query enhancement.
+2025-08-05 09:51:27,227 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:51:27,233 - WARNING - No LLM available for query classification.
+2025-08-05 09:52:52,023 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:52:52,023 - WARNING - No LLM available for query enhancement.
+2025-08-05 09:57:43,469 - ERROR - Error configuring GenAI SDK: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.. Falling back to local LLM.
+2025-08-05 09:57:43,475 - WARNING - No LLM available for query enhancement.

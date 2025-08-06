@@ -2,30 +2,41 @@
 #https://programmablesearchengine.google.com/controlpanel/all
 
 import requests
-import keyring
 
-api_key = keyring.get_password("gemini_key", "user1")
-cx = keyring.get_password("search_engine_id", "user1")
 
-# api_key = os.getenv("api_key")
+# import keyring
+# keyring.set_keyring(keyring.backends.null.Keyring())
+# gemini_key = keyring.get_password("gemini_key", "user1")
+# search_engine_id = keyring.get_password("search_engine_id", "user1")
 
-def google_search_api(query, api_key, cx, num_results=10):
+
+
+from dotenv import load_dotenv
+import os
+load_dotenv()
+gemini_key = os.getenv("GEMINI_KEY")
+search_engine_id = os.getenv("SEARCH_ENGINE_ID")
+
+
+# gemini_key = os.getenv("gemini_key")
+
+def google_search_api(query, gemini_key, search_engine_id, num_results=10):
     """
     perform a google search using google custom search json api and return results.
     
     :param query: the search query.
-    :param api_key: your google api key.
-    :param cx: your google custom search engine id.
+    :param gemini_key: your google api key.
+    :param search_engine_id: your google custom search engine id.
     :param num_results: number of results to fetch (default is 10).
     :return: list of search results with title, link, and snippet.
     """
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
         "q": query,
-        "key": api_key,
-        "cx": cx,
+        "key": gemini_key,
+        "search_engine_id": search_engine_id,
         "num": num_results
-    }
+    } 
 
     response = requests.get(url, params=params)
     data = response.json()
@@ -47,7 +58,7 @@ def google_search_api(query, api_key, cx, num_results=10):
 #standard python entry point
 if __name__ == "__main__":
     # Example usage:
-    search_results = google_search_api('what is the meaning of life?', api_key, cx)
+    search_results = google_search_api('what is the meaning of life?', gemini_key, search_engine_id)
     if "error" in search_results:
         print(search_results["error"])
     else:
