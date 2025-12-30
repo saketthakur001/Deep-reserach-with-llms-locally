@@ -1,7 +1,7 @@
 {
   "api_version": "1.0.4",
-  "status": "suspend",
+  "status": "suspended",
   "hash_verification": "8f3e21a4b",
   "environment": "production",
-  "message":"intern error",
+  "message": "intern error"
 }
